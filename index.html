@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運動熱量消耗估算與智慧減重處方系統</title>
+  <style>
+    :root {
+      --bg-warm: #FDFBF7;
+      --card-bg: #FFFFFF;
+      --card-header-bg: #F7F3EB;
+      --primary: #D97706;
+      --primary-hover: #B45309;
+      --primary-light: #FEF3C7;
+      --secondary: #E06D53;
+      --secondary-light: #FFEDD5;
+      --text-main: #292524;
+      --text-muted: #78716C;
+      --border-color: #E7E5E4;
+      --border-focus: #D97706;
+      --success: #059669;
+      --success-light: #D1FAE5;
+      --warning: #D97706;
+      --warning-light: #FEF3C7;
+      --danger: #DC2626;
+      --danger-light: #FEE2E2;
+      --info: #2563EB;
+      --info-light: #DBEAFE;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Helvetica Neue", sans-serif;
+      background-color: var(--bg-warm);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .app-badge {
+      display: inline-block;
+      background-color: var(--primary-light);
+      color: var(--primary-hover);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #1C1917;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Tab navigation */
+    .tab-nav {
+      display: flex;
+      background-color: #EFECE6;
+      padding: 6px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background-color: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Quick Presets Bar */
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      background-color: #F5F2EB;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+    }
+
+    .preset-title {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .preset-btn {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .preset-btn:hover {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-hover);
+    }
+
+    /* Layout Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      background-color: var(--card-header-bg);
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1C1917;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Form controls */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #44403C;
+      margin-bottom: 6px;
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-left: 4px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background-color: #FAFAF9;
+      color: var(--text-main);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+      background-color: #FFF;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .input-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Duration Quick Buttons */
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn-chip {
+      flex: 1;
+      padding: 6px 0;
+      border: 1px solid var(--border-color);
+      background: #FAFAF9;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .btn-chip:hover {
+      background: #F5F2EB;
+    }
+
+    .btn-chip.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-hover);
+      font-weight: 600;
+    }
+
+    /* Health Condition Tags */
+    .condition-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .condition-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      background-color: #FAFAF9;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.83rem;
+      transition: all 0.15s ease;
+    }
+
+    .condition-option:hover {
+      background-color: #F7F4EE;
+    }
+
+    .condition-option input {
+      margin-top: 2px;
+      accent-color: var(--primary);
+    }
+
+    .condition-option.selected {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Results styling */
+    .stat-box-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-box {
+      background-color: #FBF9F5;
+      border: 1px solid #EFECE6;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-box.highlight {
+      background-color: var(--primary-light);
+      border-color: #FDE68A;
+    }
+
+    .stat-box.accent {
+      background-color: var(--secondary-light);
+      border-color: #FED7AA;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #1C1917;
+      line-height: 1.2;
+    }
+
+    .stat-unit {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 2px;
+      color: var(--text-muted);
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Food equivalents */
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .food-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .food-item {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+
+    .food-icon {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+
+    .food-name {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .food-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Alert Banners */
+    .alert-banner {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .alert-success {
+      background-color: var(--success-light);
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+    }
+
+    .alert-warning {
+      background-color: var(--warning-light);
+      border: 1px solid #FDE68A;
+      color: #92400E;
+    }
+
+    .alert-danger {
+      background-color: var(--danger-light);
+      border: 1px solid #FECACA;
+      color: #991B1B;
+    }
+
+    .alert-info {
+      background-color: var(--info-light);
+      border: 1px solid #BFDBFE;
+      color: #1E40AF;
+    }
+
+    /* Exercise Prescription Card in Mode 2 */
+    .rx-card {
+      border: 1px solid #E7E5E4;
+      background: #FFFFFF;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .rx-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .rx-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .rx-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1C1917;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rx-tag {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .tag-low-impact {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .tag-moderate {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .tag-cardio {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .rx-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: #FBF9F5;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .rx-tip {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Stepper / Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+      margin-top: 14px;
+      border-left: 2px solid #E7E5E4;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -26px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      border: 2px solid white;
+    }
+
+    .timeline-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1C1917;
+    }
+
+    .timeline-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer & Info */
+    footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .collapsible-header {
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .info-bubble {
+      background: #F5F2EB;
+      border-left: 3px solid var(--primary);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.82rem;
+      color: #44403C;
+      margin-top: 14px;
+    }
+
+    /* Print utility */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .tab-nav, .preset-bar, .btn-chip {
+        display: none !important;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- App Header -->
+    <header>
+      <div class="app-badge">臨床運動處方與熱量平衡工具</div>
+      <h1>運動熱量消耗估算與智慧減重處方系統</h1>
+      <p class="subtitle">依據身體活動代謝當量（MET）與醫學減重指引，為您計算熱量赤字並量身規劃個人化運動處方</p>
+    </header>
+
+    <!-- Preset Scenarios -->
+    <div class="preset-bar">
+      <span class="preset-title">💡 快速載入情境範例：</span>
+      <button class="preset-btn" onclick="loadPreset('office_worker')">上班族 8 週減 3 公斤</button>
+      <button class="preset-btn" onclick="loadPreset('knee_friendly')">膝關節保護 12 週減 5 公斤</button>
+      <button class="preset-btn" onclick="loadPreset('beginner')">運動新手 16 週健康減脂</button>
+      <button class="preset-btn" onclick="loadPreset('active_fit')">有運動基礎 6 週雕塑 2 公斤</button>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabBtn1" onclick="switchTab(1)">
+        <span>🔥 模式一：活動熱量即時估算器</span>
+      </button>
+      <button class="tab-btn" id="tabBtn2" onclick="switchTab(2)">
+        <span>🎯 模式二：目標導向減重運動推薦處方</span>
+      </button>
+    </div>
+
+    <!-- ==================== TAB 1: 運動熱量即時估算器 ==================== -->
+    <div id="tabContent1">
+      <div class="grid-2">
+
+        <!-- Left: Inputs -->
+        <div class="card">
+          <div class="card-header">
+            <span>📝 運動與活動參數設定</span>
+          </div>
+          <div class="card-body">
+
+            <div class="form-group">
+              <label for="t1_weight">目前體重 (kg) <span class="input-hint">影響能量做功大小</span></label>
+              <input type="number" id="t1_weight" value="68" min="30" max="250" step="0.5" oninput="calcMode1()">
+            </div>
+
+            <div class="form-group">
+              <label for="t1_category">活動大類</label>
+              <select id="t1_category" onchange="updateExerciseOptions()">
+                <option value="cardio_walking">🚶‍♂️ 步行與日常走動</option>
+                <option value="cardio_running">🏃‍♀️ 跑步與慢跑</option>
+                <option value="cycling">🚴 自行車與單車</option>
+                <option value="water">🏊 游泳與水中運動</option>
+                <option value="strength">🏋️ 阻力訓練與重訓</option>
+                <option value="sports">🏸 球類與休閒運動</option>
+                <option value="daily_chores">🧹 家務與日常勞動</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="t1_exercise">具體運動項目與強度 (MET)</label>
+              <select id="t1_exercise" onchange="calcMode1()"></select>
+            </div>
+
+            <div class="form-group">
+              <label for="t1_duration">持續時間 (分鐘)</label>
+              <input type="number" id="t1_duration" value="45" min="1" max="600" step="5" oninput="calcMode1()">
+              <div class="btn-group">
+                <button class="btn-chip" onclick="setT1Duration(15)">15分</button>
+                <button class="btn-chip" onclick="setT1Duration(30)">30分</button>
+                <button class="btn-chip active" onclick="setT1Duration(45)">45分</button>
+                <button class="btn-chip" onclick="setT1Duration(60)">60分</button>
+                <button class="btn-chip" onclick="setT1Duration(90)">90分</button>
+              </div>
+            </div>
+
+            <div class="info-bubble">
+              <strong>💡 什麼是 MET（代謝當量）？</strong><br>
+              1 MET 代表坐著休息時每公斤體重每小時消耗約 1 大卡。MET 越高代表運動強度越高。
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Real-time Results -->
+        <div class="card">
+          <div class="card-header">
+            <span>📊 熱量消耗估算結果</span>
+          </div>
+          <div class="card-body">
+
+            <div class="stat-box-container">
+              <div class="stat-box highlight">
+                <div class="stat-label">淨消耗熱量 (Net Burn)</div>
+                <div class="stat-value" id="t1_net_cal">0 <span class="stat-unit">kcal</span></div>
+                <div class="stat-sub">減重專屬：運動額外創造的赤字</div>
+              </div>
+
+              <div class="stat-box">
+                <div class="stat-label">總消耗熱量 (Gross Burn)</div>
+                <div class="stat-value" id="t1_gross_cal">0 <span class="stat-unit">kcal</span></div>
+                <div class="stat-sub">含運動時段內之基礎代謝</div>
+              </div>
+            </div>
+
+            <div class="stat-box-container">
+              <div class="stat-box accent">
+                <div class="stat-label">相當於燃燒純脂肪</div>
+                <div class="stat-value" id="t1_fat_burn">0 <span class="stat-unit">g</span></div>
+                <div class="stat-sub">以每公斤脂肪組織 7700 kcal 換算</div>
+              </div>
+
+              <div class="stat-box">
+                <div class="stat-label">運動強度評估</div>
+                <div class="stat-value" id="t1_intensity_text" style="font-size: 1.25rem; padding-top: 4px;">中等強度</div>
+                <div class="stat-sub" id="t1_met_display">MET: 6.0</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 18px;">
+              <div style="font-size: 0.85rem; font-weight: 700; color: #44403C; margin-bottom: 6px;">
+                🍚 相當於消耗了哪些食物的熱量？
+              </div>
+              <div class="food-grid">
+                <div class="food-item">
+                  <div class="food-icon">🍚</div>
+                  <div class="food-name">白飯 (碗)</div>
+                  <div class="food-val" id="t1_food_rice">0.0</div>
+                </div>
+                <div class="food-item">
+                  <div class="food-icon">🧋</div>
+                  <div class="food-name">全糖珍奶 (杯)</div>
+                  <div class="food-val" id="t1_food_boba">0.0</div>
+                </div>
+                <div class="food-item">
+                  <div class="food-icon">🍎</div>
+                  <div class="food-name">中型蘋果 (顆)</div>
+                  <div class="food-val" id="t1_food_apple">0.0</div>
+                </div>
+                <div class="food-item">
+                  <div class="food-icon">🍗</div>
+                  <div class="food-name">即食雞胸 (片)</div>
+                  <div class="food-val" id="t1_food_chicken">0.0</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: 目標導向減重運動推薦處方 ==================== -->
+    <div id="tabContent2" style="display: none;">
+      <div class="grid-2">
+
+        <!-- Left: Inputs & Targets -->
+        <div>
+          <!-- Bio & Health Card -->
+          <div class="card">
+            <div class="card-header">
+              <span>👤 1. 個人生理與健康狀況</span>
+            </div>
+            <div class="card-body">
+
+              <div class="input-row-3 form-group">
+                <div>
+                  <label for="t2_sex">生理性別</label>
+                  <select id="t2_sex" onchange="calcMode2()">
+                    <option value="female">女性</option>
+                    <option value="male" selected>男性</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="t2_age">年齡 (歲)</label>
+                  <input type="number" id="t2_age" value="38" min="15" max="100" oninput="calcMode2()">
+                </div>
+                <div>
+                  <label for="t2_height">身高 (cm)</label>
+                  <input type="number" id="t2_height" value="172" min="100" max="230" oninput="calcMode2()">
+                </div>
+              </div>
+
+              <div class="input-row form-group">
+                <div>
+                  <label for="t2_weight">目前體重 (kg)</label>
+                  <input type="number" id="t2_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeightAndCalc()">
+                </div>
+                <div>
+                  <label>BMI 體位指標</label>
+                  <div id="t2_bmi_display" style="padding: 9px 12px; background: #F5F2EB; border-radius: 8px; font-weight: 700; font-size: 0.95rem; color: #1C1917;">
+                    26.4 (過重)
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>健康狀況與運動限制 (自動過濾運動風險)</label>
+                <div class="condition-grid">
+                  <label class="condition-option selected" id="cond_none_wrap">
+                    <input type="checkbox" id="cond_none" checked onchange="handleConditionChange('none')">
+                    <span>🟢 一般健康 / 無特殊限制</span>
+                  </label>
+                  <label class="condition-option" id="cond_knee_wrap">
+                    <input type="checkbox" id="cond_knee" onchange="handleConditionChange('knee')">
+                    <span>🟡 膝關節/下肢退化疼痛</span>
+                  </label>
+                  <label class="condition-option" id="cond_cvd_wrap">
+                    <input type="checkbox" id="cond_cvd" onchange="handleConditionChange('cvd')">
+                    <span>🟠 心血管/高血壓病史</span>
+                  </label>
+                  <label class="condition-option" id="cond_dm_wrap">
+                    <input type="checkbox" id="cond_dm" onchange="handleConditionChange('dm')">
+                    <span>🔵 糖尿病 / 代謝異常</span>
+                  </label>
+                  <label class="condition-option" id="cond_beginner_wrap">
+                    <input type="checkbox" id="cond_beginner" onchange="handleConditionChange('beginner')">
+                    <span>⚪ 運動新手 / 久坐少動</span>
+                  </label>
+                  <label class="condition-option" id="cond_obese_wrap">
+                    <input type="checkbox" id="cond_obese" onchange="handleConditionChange('obese')">
+                    <span>🟣 高體重負荷 (BMI≥30)</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Goal & Plan Card -->
+          <div class="card">
+            <div class="card-header">
+              <span>🎯 2. 減重目標與排程規劃</span>
+            </div>
+            <div class="card-body">
+
+              <div class="input-row form-group">
+                <div>
+                  <label for="t2_target_loss">預計減重目標 (kg)</label>
+                  <input type="number" id="t2_target_loss" value="4" min="0.5" max="50" step="0.5" oninput="calcMode2()">
+                </div>
+                <div>
+                  <label for="t2_time_weeks">預計達成時間 (週)</label>
+                  <input type="number" id="t2_time_weeks" value="8" min="1" max="104" step="1" oninput="calcMode2()">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="t2_days_per_week">每週預計可運動天數</label>
+                <select id="t2_days_per_week" onchange="calcMode2()">
+                  <option value="2">每週 2 天（時間較緊湊）</option>
+                  <option value="3">每週 3 天（黃金入門頻率）</option>
+                  <option value="4" selected>每週 4 天（規律減脂推薦）</option>
+                  <option value="5">每週 5 天（積極進階）</option>
+                  <option value="6">每週 6 天（高頻率）</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="t2_strategy">熱量赤字分攤策略</label>
+                <select id="t2_strategy" onchange="calcMode2()">
+                  <option value="0.4" selected>🏆 雙管齊下：運動分攤 40% + 飲食減少 60%（臨床推薦最易持久）</option>
+                  <option value="0.3">🥗 飲食為主：運動分攤 30% + 飲食減少 70%</option>
+                  <option value="0.5">🏃 均衡平均：運動分攤 50% + 飲食減少 50%</option>
+                  <option value="1.0">⚡ 全靠運動：運動分攤 100%（不改變飲食，訓練量較大）</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Prescription & Feasibility Output -->
+        <div>
+
+          <!-- Feasibility & Safety Dashboard -->
+          <div class="card">
+            <div class="card-header">
+              <span>🩺 減重速度與安全性診斷</span>
+            </div>
+            <div class="card-body">
+              <div id="safety_alert_box"></div>
+
+              <div class="stat-box-container" style="margin-bottom: 0;">
+                <div class="stat-box">
+                  <div class="stat-label">每週減重速率</div>
+                  <div class="stat-value" id="t2_weekly_rate">0.50 <span class="stat-unit">kg/週</span></div>
+                  <div class="stat-sub" id="t2_rate_verdict">安全標準速度</div>
+                </div>
+
+                <div class="stat-box highlight">
+                  <div class="stat-label">每日總熱量赤字</div>
+                  <div class="stat-value" id="t2_daily_deficit">550 <span class="stat-unit">kcal</span></div>
+                  <div class="stat-sub" id="t2_split_desc">運動 220 + 飲食 330</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tailored Exercise Prescription Cards -->
+          <div class="card">
+            <div class="card-header">
+              <span>📋 量身推薦運動處方（任選一或交替進行）</span>
+            </div>
+            <div class="card-body">
+
+              <div id="rx_container">
+                <!-- Dynamically populated -->
+              </div>
+
+              <!-- Phased Guidance -->
+              <div style="margin-top: 18px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                <div style="font-size: 0.85rem; font-weight: 700; color: #1C1917; margin-bottom: 8px;">
+                  📅 漸進式執行階段建議
+                </div>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">第 1～2 週：習慣建立與關節適應期</div>
+                    <div class="timeline-desc">建議先執行上述處方時間的 60%～70%，著重動作標準度與心肺適應。</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">第 3 週起：標準燃脂目標期</div>
+                    <div class="timeline-desc">達到建議之每週頻率與單次時間，每週定期測量體重與體脂。</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>⚠️ 衛教提醒：本工具之計算結果基於運動代謝當量（MET）與臨床統計估算，個人實際代謝率、肌肉量、體溫調節與心肺狀況可能略有差異。若有特殊慢性病或心血管不適，請先諮詢醫師或物理治療師。</p>
+      <p style="margin-top: 4px;">Designed with Warm Clinical Style for Health Promotion</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // ==================== MET DATABASE ====================
+    const EXERCISE_DB = {
+      cardio_walking: [
+        { id: 'w_slow', name: '慢速散步 / 生活走動 (約 3.2 km/h)', met: 2.5, impact: 'low', tags: ['低衝擊', '關節友善', '新手'] },
+        { id: 'w_moderate', name: '平地中速健走 (約 4.8 km/h)', met: 3.5, impact: 'low', tags: ['日常推薦', '低衝擊'] },
+        { id: 'w_brisk', name: '平地快走 / 競走 (約 6.0 km/h)', met: 4.5, impact: 'low', tags: ['有效燃脂', '低衝擊'] },
+        { id: 'w_uphill', name: '坡度快走 / 輕度登山', met: 6.0, impact: 'mod', tags: ['心肺強化', '肌力'] },
+        { id: 'w_stairs', name: '爬樓梯 (上樓)', met: 8.0, impact: 'high', tags: ['高強度', '關節注意'] }
+      ],
+      cardio_running: [
+        { id: 'r_jog_slow', name: '超慢跑 / 輕鬆慢跑 (約 6.5-7 km/h)', met: 6.0, impact: 'mod', tags: ['有氧燃脂', '心肺'] },
+        { id: 'r_jog_mod', name: '標準慢跑 (約 8.0 km/h)', met: 8.0, impact: 'high', tags: ['高效燃脂', '心肺'] },
+        { id: 'r_run_fast', name: '快速跑步 (約 10.0 km/h)', met: 10.0, impact: 'high', tags: ['高強度', '運動員'] },
+        { id: 'r_hiit', name: '高強度間歇跑 (HIIT Sprint)', met: 11.5, impact: 'high', tags: ['高強度', '後燃效應'] }
+      ],
+      cycling: [
+        { id: 'c_leisure', name: '休閒騎自行車 (約 15 km/h)', met: 4.0, impact: 'low', tags: ['低衝擊', '通勤'] },
+        { id: 'c_stationary_light', name: '固定式健身車 (輕阻力約 50W)', met: 4.0, impact: 'low', tags: ['關節友善', '心血管推薦'] },
+        { id: 'c_stationary_mod', name: '固定式健身車 (中阻力約 100W)', met: 5.5, impact: 'low', tags: ['減脂推薦', '低衝擊'] },
+        { id: 'c_outdoor_brisk', name: '公路單車中高速 (約 20-22 km/h)', met: 8.0, impact: 'low', tags: ['高效有氧'] },
+        { id: 'c_spinning', name: '飛輪有氧課程 (高強度)', met: 8.5, impact: 'mod', tags: ['高強度', '間歇'] }
+      ],
+      water: [
+        { id: 'sw_walk', name: '水中健走 / 水中有氧 (Water Aerobics)', met: 4.5, impact: 'low', tags: ['關節首選', '肥胖友善', '復健'] },
+        { id: 'sw_breast_mod', name: '蛙式游泳 (中等休閒速度)', met: 5.5, impact: 'low', tags: ['全身肌群', '關節零負擔'] },
+        { id: 'sw_free_mod', name: '自由式游泳 (中等速度持續游)', met: 7.0, impact: 'low', tags: ['高效燃脂', '低衝擊'] },
+        { id: 'sw_free_fast', name: '自由式快游 / 蝶式 (競速強度)', met: 9.8, impact: 'mod', tags: ['高強度'] }
+      ],
+      strength: [
+        { id: 'st_calisthenics_light', name: '輕度徒手肌力 / 伸展 / 瑜伽', met: 3.0, impact: 'low', tags: ['柔韌度', '核心'] },
+        { id: 'st_pilates', name: '皮拉提斯 / 核心肌群訓練', met: 3.8, impact: 'low', tags: ['核心穩定', '低衝擊'] },
+        { id: 'st_weight_mod', name: '器械重量訓練 (中等組間休息)', met: 4.0, impact: 'low', tags: ['維持肌肉', '防代謝下降'] },
+        { id: 'st_circuit', name: '循環肌力訓練 / 徒手深蹲伏地挺身', met: 5.5, impact: 'mod', tags: ['肌耐力', '代謝提升'] },
+        { id: 'st_kettlebell', name: '壺鈴訓練 / 綜合體能 (CrossFit)', met: 8.0, impact: 'mod', tags: ['高強度', '肌力爆發'] }
+      ],
+      sports: [
+        { id: 'sp_table_tennis', name: '桌球 / 乒乓球', met: 4.0, impact: 'low', tags: ['敏捷性', '趣味'] },
+        { id: 'sp_badminton_rec', name: '羽毛球 (一般休閒對打)', met: 4.5, impact: 'mod', tags: ['全身活動'] },
+        { id: 'sp_badminton_comp', name: '羽毛球 (競賽激烈移動)', met: 7.0, impact: 'high', tags: ['高消耗', '跳躍'] },
+        { id: 'sp_tennis', name: '網球單打', met: 7.3, impact: 'high', tags: ['心肺', '爆發力'] },
+        { id: 'sp_basketball', name: '籃球全場競賽', met: 8.0, impact: 'high', tags: ['高強度', '跳躍'] }
+      ],
+      daily_chores: [
+        { id: 'ch_desk', name: '站姿辦公 / 輕度伸展', met: 1.8, impact: 'low', tags: ['打破久坐'] },
+        { id: 'ch_light', name: '吸塵 / 拖地 / 擦窗戶', met: 3.0, impact: 'low', tags: ['日常活動'] },
+        { id: 'ch_gardening', name: '園藝除草 / 搬運輕量物品', met: 4.0, impact: 'mod', tags: ['全身活動'] },
+        { id: 'ch_heavy_move', name: '搬重物上下樓梯 / 整理家具', met: 6.5, impact: 'high', tags: ['高勞動'] }
+      ]
+    };
+
+    // ==================== TAB 1 LOGIC ====================
+    function updateExerciseOptions() {
+      const cat = document.getElementById('t1_category').value;
+      const select = document.getElementById('t1_exercise');
+      select.innerHTML = '';
+
+      const items = EXERCISE_DB[cat] || [];
+      items.forEach((item, index) => {
+        const opt = document.createElement('option');
+        opt.value = item.met;
+        opt.dataset.impact = item.impact;
+        opt.dataset.id = item.id;
+        opt.textContent = `${item.name} (MET: ${item.met})`;
+        if (index === 0) opt.selected = true;
+        select.appendChild(opt);
+      });
+
+      calcMode1();
+    }
+
+    function setT1Duration(mins) {
+      document.getElementById('t1_duration').value = mins;
+      const chips = document.querySelectorAll('.btn-chip');
+      chips.forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      calcMode1();
+    }
+
+    function calcMode1() {
+      const weight = parseFloat(document.getElementById('t1_weight').value) || 65;
+      const select = document.getElementById('t1_exercise');
+      const met = parseFloat(select.value) || 3.5;
+      const durationMin = parseFloat(document.getElementById('t1_duration').value) || 30;
+      const durationHr = durationMin / 60;
+
+      // Calculations
+      // Gross calories = MET * weight * hr
+      const gross = met * weight * durationHr;
+      // Net calories = (MET - 1) * weight * hr
+      const net = Math.max(0, (met - 1) * weight * durationHr);
+
+      // Fat burn (approx 7.7 kcal per g of body fat tissue)
+      const fatGrams = net / 7.7;
+
+      // Update UI
+      document.getElementById('t1_gross_cal').innerHTML = `${Math.round(gross)} <span class="stat-unit">kcal</span>`;
+      document.getElementById('t1_net_cal').innerHTML = `${Math.round(net)} <span class="stat-unit">kcal</span>`;
+      document.getElementById('t1_fat_burn').innerHTML = `${fatGrams.toFixed(1)} <span class="stat-unit">g</span>`;
+
+      // Intensity level
+      let intensity = '低強度 (輕度活動)';
+      if (met >= 6.0) intensity = '高強度 (心肺激烈)';
+      else if (met >= 3.0) intensity = '中等強度 (有氧燃脂)';
+      document.getElementById('t1_intensity_text').textContent = intensity;
+      document.getElementById('t1_met_display').textContent = `MET 值：${met.toFixed(1)}`;
+
+      // Food equivalents
+      // 白飯 1 碗 約 280 kcal
+      // 珍奶 1 杯 約 550 kcal
+      // 蘋果 1 顆 約 60 kcal
+      // 雞胸肉 1 片 約 130 kcal
+      document.getElementById('t1_food_rice').textContent = (net / 280).toFixed(1);
+      document.getElementById('t1_food_boba').textContent = (net / 550).toFixed(1);
+      document.getElementById('t1_food_apple').textContent = (net / 60).toFixed(1);
+      document.getElementById('t1_food_chicken').textContent = (net / 130).toFixed(1);
+    }
+
+    // ==================== TAB 2 LOGIC ====================
+    function syncWeightAndCalc() {
+      const w = document.getElementById('t2_weight').value;
+      document.getElementById('t1_weight').value = w;
+      calcMode2();
+    }
+
+    function handleConditionChange(type) {
+      const noneBox = document.getElementById('cond_none');
+      const otherIds = ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner', 'cond_obese'];
+
+      if (type === 'none') {
+        if (noneBox.checked) {
+          otherIds.forEach(id => {
+            document.getElementById(id).checked = false;
+            document.getElementById(id + '_wrap').classList.remove('selected');
+          });
+          document.getElementById('cond_none_wrap').classList.add('selected');
+        }
+      } else {
+        if (document.getElementById('cond_' + type).checked) {
+          noneBox.checked = false;
+          document.getElementById('cond_none_wrap').classList.remove('selected');
+          document.getElementById('cond_' + type + '_wrap').classList.add('selected');
+        } else {
+          document.getElementById('cond_' + type + '_wrap').classList.remove('selected');
+          // if all unchecked, check none
+          const anyChecked = otherIds.some(id => document.getElementById(id).checked);
+          if (!anyChecked) {
+            noneBox.checked = true;
+            document.getElementById('cond_none_wrap').classList.add('selected');
+          }
+        }
+      }
+      calcMode2();
+    }
+
+    function calcMode2() {
+      // 1. Get input metrics
+      const sex = document.getElementById('t2_sex').value;
+      const age = parseFloat(document.getElementById('t2_age').value) || 30;
+      const height = parseFloat(document.getElementById('t2_height').value) || 170;
+      const weight = parseFloat(document.getElementById('t2_weight').value) || 70;
+      const targetLossKg = parseFloat(document.getElementById('t2_target_loss').value) || 3;
+      const weeks = parseFloat(document.getElementById('t2_time_weeks').value) || 8;
+      const daysPerWeek = parseInt(document.getElementById('t2_days_per_week').value) || 4;
+      const exerciseSplitRatio = parseFloat(document.getElementById('t2_strategy').value) || 0.4;
+
+      // 2. BMI Calculation
+      const heightM = height / 100;
+      const bmi = weight / (heightM * heightM);
+      let bmiCategory = '正常體位';
+      let bmiColor = '#059669';
+      if (bmi < 18.5) { bmiCategory = '過輕'; bmiColor = '#2563EB'; }
+      else if (bmi >= 24 && bmi < 27) { bmiCategory = '過重'; bmiColor = '#D97706'; }
+      else if (bmi >= 27 && bmi < 30) { bmiCategory = '輕度肥胖'; bmiColor = '#EA580C'; }
+      else if (bmi >= 30) { bmiCategory = '中重度肥胖'; bmiColor = '#DC2626'; }
+
+      document.getElementById('t2_bmi_display').innerHTML = `<span style="color:${bmiColor}">${bmi.toFixed(1)} (${bmiCategory})</span>`;
+
+      // Auto check obesity tag if BMI >= 30
+      if (bmi >= 30 && !document.getElementById('cond_obese').checked) {
+        document.getElementById('cond_obese').checked = true;
+        document.getElementById('cond_obese_wrap').classList.add('selected');
+        document.getElementById('cond_none').checked = false;
+        document.getElementById('cond_none_wrap').classList.remove('selected');
+      }
+
+      // 3. Deficit Calculations
+      // 1 kg fat tissue approx 7700 kcal
+      const totalDeficitNeeded = targetLossKg * 7700;
+      const weeklyDeficit = totalDeficitNeeded / weeks;
+      const dailyDeficit = weeklyDeficit / 7;
+      const weeklyLossRate = targetLossKg / weeks;
+
+      // Weekly deficit from exercise vs diet
+      const weeklyExerciseDeficit = weeklyDeficit * exerciseSplitRatio;
+      const dailyDietDeficit = (weeklyDeficit * (1 - exerciseSplitRatio)) / 7;
+      const dailyExerciseDeficit = weeklyExerciseDeficit / 7;
+
+      // 4. Safety & Feasibility Alert
+      const alertBox = document.getElementById('safety_alert_box');
+      document.getElementById('t2_weekly_rate').innerHTML = `${weeklyLossRate.toFixed(2)} <span class="stat-unit">kg/週</span>`;
+      document.getElementById('t2_daily_deficit').innerHTML = `${Math.round(dailyDeficit)} <span class="stat-unit">kcal</span>`;
+      document.getElementById('t2_split_desc').textContent = `運動 ${Math.round(dailyExerciseDeficit)} kcal + 飲食 ${Math.round(dailyDietDeficit)} kcal`;
+
+      if (weeklyLossRate <= 0.8) {
+        document.getElementById('t2_rate_verdict').textContent = '✅ 黃金安全速度';
+        document.getElementById('t2_rate_verdict').style.color = 'var(--success)';
+        alertBox.className = 'alert-banner alert-success';
+        alertBox.innerHTML = `
+          <span>🟢</span>
+          <div><strong>目標設定適中！</strong> 每週減重在 0.5～0.8 kg 範圍內，符合臨床安全減重標準，能最大程度保留肌肉量並預防復胖。</div>
+        `;
+      } else if (weeklyLossRate <= 1.2) {
+        document.getElementById('t2_rate_verdict').textContent = '⚠️ 較具挑戰性速度';
+        document.getElementById('t2_rate_verdict').style.color = 'var(--warning)';
+        alertBox.className = 'alert-banner alert-warning';
+        alertBox.innerHTML = `
+          <span>🟡</span>
+          <div><strong>目標具一定挑戰度。</strong> 每週減重達 ${weeklyLossRate.toFixed(2)} kg，需嚴格落實飲食熱量赤字與運動配合，建議特別注意補充足夠蛋白質與水份。</div>
+        `;
+      } else {
+        document.getElementById('t2_rate_verdict').textContent = '🚨 速度過快警示';
+        document.getElementById('t2_rate_verdict').style.color = 'var(--danger)';
+        alertBox.className = 'alert-banner alert-danger';
+        alertBox.innerHTML = `
+          <span>🔴</span>
+          <div><strong>減重速度過於激進！</strong> 每週減重超過 1.2 kg（每日總赤字需達 ${Math.round(dailyDeficit)} kcal）。過快的減重極易造成肌肉流失、掉髮、免疫力下降及溜溜球復胖，<strong>強烈建議將時間拉長至 ${Math.ceil(targetLossKg / 0.75)} 週以上</strong>。</div>
+        `;
+      }
+
+      // 5. Exercise Matching Engine based on Health Conditions
+      const condKnee = document.getElementById('cond_knee').checked;
+      const condCvd = document.getElementById('cond_cvd').checked;
+      const condDm = document.getElementById('cond_dm').checked;
+      const condBeginner = document.getElementById('cond_beginner').checked;
+      const condObese = document.getElementById('cond_obese').checked;
+
+      const matchedPlans = getPrescriptionPlans({
+        knee: condKnee,
+        cvd: condCvd,
+        dm: condDm,
+        beginner: condBeginner,
+        obese: condObese,
+        age: age,
+        bmi: bmi
+      });
+
+      // 6. Calculate Duration per Session for each matched plan
+      const rxContainer = document.getElementById('rx_container');
+      rxContainer.innerHTML = '';
+
+      matchedPlans.forEach(plan => {
+        // Net calories per minute = (MET - 1) * weight / 60
+        const netCalPerMin = ((plan.met - 1) * weight) / 60;
+
+        // Single session deficit target = weeklyExerciseDeficit / daysPerWeek
+        const targetPerSession = weeklyExerciseDeficit / daysPerWeek;
+
+        let minutesNeeded = Math.round(targetPerSession / netCalPerMin);
+        if (minutesNeeded < 15) minutesNeeded = 15; // minimum viable aerobic stimulus
+
+        // Warning if duration too long
+        let durationWarning = '';
+        if (minutesNeeded > 60) {
+          durationWarning = `<div style="color:var(--danger); font-size:0.75rem; margin-top:4px;">⚠️ 單次時間較長，建議增加每週運動天數（如改為 5 天）或增加飲食赤字分攤。</div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'rx-card';
+        card.innerHTML = `
+          <div class="rx-header">
+            <div class="rx-name">${plan.icon} ${plan.name}</div>
+            <span class="rx-tag ${plan.tagClass}">${plan.tagText}</span>
+          </div>
+          <div class="rx-details">
+            <div>
+              <div style="color:var(--text-muted); font-size:0.72rem;">建議頻率</div>
+              <div style="font-weight:700; font-size:1.05rem; color:#1C1917;">每週 ${daysPerWeek} 天</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.72rem;">每次運動時長</div>
+              <div style="font-weight:800; font-size:1.15rem; color:var(--primary);">${minutesNeeded} 分鐘</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.72rem;">每次淨消耗</div>
+              <div style="font-weight:700; font-size:1.05rem; color:#1C1917;">≈ ${Math.round(targetPerSession)} kcal</div>
+            </div>
+          </div>
+          <div class="rx-tip"><strong>💡 執行要點：</strong>${plan.guidance}</div>
+          ${durationWarning}
+        `;
+        rxContainer.appendChild(card);
+      });
+
+    }
+
+    function getPrescriptionPlans(conds) {
+      let list = [];
+
+      // 膝關節問題或高肥胖：優先零關節衝擊
+      if (conds.knee || conds.obese) {
+        list.push({
+          icon: '🏊‍♂️',
+          name: '水中健走 / 水中有氧 (Water Aerobics)',
+          met: 4.5,
+          tagClass: 'tag-low-impact',
+          tagText: '關節零負擔首選',
+          guidance: '浮力可減輕 80% 體重對膝蓋的衝擊，在水中大步快走並配合擺臂，安全維持心肺。'
+        });
+        list.push({
+          icon: '🚴',
+          name: '固定式健身單車 (中低阻力)',
+          met: 5.0,
+          tagClass: 'tag-low-impact',
+          tagText: '低衝擊減脂',
+          guidance: '調整座椅高度至踏板踩到底時膝蓋微彎約 15~20 度，保持踏頻 70~80 rpm，不重踩。'
+        });
+        list.push({
+          icon: '🚶',
+          name: '平地平穩快走 (穿著避震鞋款)',
+          met: 3.8,
+          tagClass: 'tag-moderate',
+          tagText: '日常基礎有氧',
+          guidance: '選擇平整跑道或步道，避免下坡走或階梯，感覺呼吸微喘但能說出簡短句子的強度。'
+        });
+        return list;
+      }
+
+      // 心血管/高血壓：避免極限力竭與高衝擊，強調平穩中等強度
+      if (conds.cvd) {
+        list.push({
+          icon: '🚶‍♂️',
+          name: '平地中速健走 / 戶外平路漫遊',
+          met: 4.0,
+          tagClass: 'tag-low-impact',
+          tagText: '心血管平穩保護',
+          guidance: '運動前後務必進行 5~10 分鐘溫和暖身與收操，避免突發性心率暴增。'
+        });
+        list.push({
+          icon: '🚴',
+          name: '靠背式 / 固定式健身車',
+          met: 4.5,
+          tagClass: 'tag-low-impact',
+          tagText: '平穩控心率',
+          guidance: '維持於自覺用力程度（RPE 11-13，有點吃力但能說話），避免閉氣用力。'
+        });
+        list.push({
+          icon: '🏊',
+          name: '休閒蛙式 / 輕鬆慢游',
+          met: 5.5,
+          tagClass: 'tag-moderate',
+          tagText: '全身有氧',
+          guidance: '節奏保持均勻，水溫適中，感覺微喘即可，勿追求衝刺速度。'
+        });
+        return list;
+      }
+
+      // 新手 / 久坐少動：循序漸進
+      if (conds.beginner) {
+        list.push({
+          icon: '🚶‍♀️',
+          name: '平地漸進快走 (Brisk Walking)',
+          met: 4.0,
+          tagClass: 'tag-low-impact',
+          tagText: '入門首選',
+          guidance: '抬頭挺胸、核心微收、步伐放輕，可拆分單日 2 次各累積 20 分鐘達到總量。'
+        });
+        list.push({
+          icon: '🚴',
+          name: '室內健身車 / 公路休閒騎車',
+          met: 4.8,
+          tagClass: 'tag-low-impact',
+          tagText: '腿部肌力啟動',
+          guidance: '低阻力輕快踩踏，培養持續運動的習慣與基礎心肺耐力。'
+        });
+        list.push({
+          icon: '🏋️‍♂️',
+          name: '超慢跑或中等徒手肌力有氧',
+          met: 5.5,
+          tagClass: 'tag-moderate',
+          tagText: '綜合適能',
+          guidance: '配合深蹲、分腿蹲與輕度慢跑，加強基礎代謝與核心力量。'
+        });
+        return list;
+      }
+
+      // 一般健康 / 糖尿病（需配合阻力） / 正常體能
+      list.push({
+        icon: '🏃‍♂️',
+        name: '標準戶外或跑步機慢跑 (約 8 km/h)',
+        met: 7.5,
+        tagClass: 'tag-cardio',
+        tagText: '高效燃脂心肺',
+        guidance: '維持心率在最大心率之 65%~80% 燃脂區間，每週搭配 1~2 次肌力訓練防肌肉流失。'
+      });
+      list.push({
+        icon: '🏊‍♀️',
+        name: '中速自由式 / 蛙式連續游泳',
+        met: 6.5,
+        tagClass: 'tag-low-impact',
+        tagText: '全身肌群雕塑',
+        guidance: '無關節負擔且能大量動員上半身與核心肌群，代謝消耗穩定。'
+      });
+      list.push({
+        icon: '🚴‍♂️',
+        name: '飛輪有氧 / 公路中速騎乘 (20 km/h)',
+        met: 7.0,
+        tagClass: 'tag-cardio',
+        tagText: '下肢耐力與爆發',
+        guidance: '可採用間歇調節（3分鐘中速 + 1分鐘加速），提高後燃效應（EPOC）。'
+      });
+      list.push({
+        icon: '🏸',
+        name: '羽球 / 網球 / 綜合球類活動',
+        met: 6.0,
+        tagClass: 'tag-moderate',
+        tagText: '趣味多元活動',
+        guidance: '結合敏捷、急停與爆發力，適合與朋友互動提升運動意願。'
+      });
+
+      return list;
+    }
+
+    // ==================== TAB SWITCHING & PRESETS ====================
+    function switchTab(tabIndex) {
+      document.getElementById('tabContent1').style.display = (tabIndex === 1) ? 'block' : 'none';
+      document.getElementById('tabContent2').style.display = (tabIndex === 2) ? 'block' : 'none';
+      document.getElementById('tabBtn1').classList.toggle('active', tabIndex === 1);
+      document.getElementById('tabBtn2').classList.toggle('active', tabIndex === 2);
+    }
+
+    function loadPreset(key) {
+      if (key === 'office_worker') {
+        switchTab(2);
+        document.getElementById('t2_sex').value = 'male';
+        document.getElementById('t2_age').value = 35;
+        document.getElementById('t2_height').value = 175;
+        document.getElementById('t2_weight').value = 80;
+        document.getElementById('t2_target_loss').value = 3;
+        document.getElementById('t2_time_weeks').value = 8;
+        document.getElementById('t2_days_per_week').value = '4';
+        document.getElementById('t2_strategy').value = '0.4';
+        handleConditionChange('none');
+      } else if (key === 'knee_friendly') {
+        switchTab(2);
+        document.getElementById('t2_sex').value = 'female';
+        document.getElementById('t2_age').value = 52;
+        document.getElementById('t2_height').value = 160;
+        document.getElementById('t2_weight').value = 72;
+        document.getElementById('t2_target_loss').value = 5;
+        document.getElementById('t2_time_weeks').value = 12;
+        document.getElementById('t2_days_per_week').value = '4';
+        document.getElementById('t2_strategy').value = '0.4';
+        document.getElementById('cond_knee').checked = true;
+        handleConditionChange('knee');
+      } else if (key === 'beginner') {
+        switchTab(2);
+        document.getElementById('t2_sex').value = 'female';
+        document.getElementById('t2_age').value = 28;
+        document.getElementById('t2_height').value = 165;
+        document.getElementById('t2_weight').value = 68;
+        document.getElementById('t2_target_loss').value = 4;
+        document.getElementById('t2_time_weeks').value = 16;
+        document.getElementById('t2_days_per_week').value = '3';
+        document.getElementById('t2_strategy').value = '0.3';
+        document.getElementById('cond_beginner').checked = true;
+        handleConditionChange('beginner');
+      } else if (key === 'active_fit') {
+        switchTab(2);
+        document.getElementById('t2_sex').value = 'male';
+        document.getElementById('t2_age').value = 29;
+        document.getElementById('t2_height').value = 178;
+        document.getElementById('t2_weight').value = 76;
+        document.getElementById('t2_target_loss').value = 2;
+        document.getElementById('t2_time_weeks').value = 6;
+        document.getElementById('t2_days_per_week').value = '5';
+        document.getElementById('t2_strategy').value = '0.5';
+        handleConditionChange('none');
+      }
+      calcMode2();
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateExerciseOptions();
+      calcMode2();
+    });
+  </script>
+</body>
+</html>
