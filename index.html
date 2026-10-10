@@ -1195,7 +1195,49 @@
       </div>
     </div>
 
-    <!--METHOD-->
+    <details class="method" id="method">
+      <summary>📚 計算方法、判斷規則與參考文獻</summary>
+
+      <h3>1. 熱量計算</h3>
+      <ul>
+        <li>總消耗 = MET × 體重（kg）× 時間（小時），以 1 MET ≈ 1 kcal/kg/h（3.5 mL O₂/kg/min）換算。</li>
+        <li>模式一淨消耗 = (MET − 1) × 體重 × 時間。模式二以個人估算靜止代謝（Mifflin-St Jeor BMR ÷ 1440）取代 1 MET 扣除，並顯示「個人校正 MET」＝ MET × (體重/60) ÷ 個人每分鐘 RMR；概念同 2024 Compendium 網站建議的 corrected MET（該網站以 Harris-Benedict 估算 RMR）。</li>
+        <li>強度分級採絕對強度：&lt;3 MET 低、3–5.9 中等、≥6 高強度。每週總量以「高強度 1 分鐘 = 中等 2 分鐘」換算。</li>
+        <li>BMR 用 Mifflin-St Jeor；TDEE = BMR × 目前活動係數（1.2／1.375／1.55／1.725）；每日建議攝取 = TDEE − 飲食分攤赤字。</li>
+        <li>每公斤體重變化以 7700 kcal 線性估算。實際減重會隨體重下降與代謝適應而變慢，長期會比線性估算少，停滯時應重新評估。</li>
+        <li>單次運動時間 = 每週運動赤字 ÷ 天數 ÷ 每分鐘淨消耗，無條件進位到 5 分鐘、最少 15 分鐘；&gt;60 分鐘提示可分段，&gt;90 分鐘判定不可行，並反推單次 ≤60 分鐘所需的週數與運動分攤比例。</li>
+      </ul>
+
+      <h3>2. 判斷規則</h3>
+      <ul>
+        <li><strong>停止條件</strong>（不產生處方）：年齡 &lt;18 歲、目前 BMI &lt;18.5、目標體重 BMI &lt;18.5、勾選運動相關警訊症狀。</li>
+        <li><strong>減重速度</strong>：每週 0.25–1 kg 且 ≤ 體重 1% 為適中；&gt;1 kg 或 &gt;1% 為黃燈；&gt;1.5 kg 或 &gt;1.5% 為紅燈；&lt;0.25 kg 為溫和。（國健署：每日少 500 kcal 約每週減 0.5 kg；AHA/ACC/TOS 2013 以 6 個月減 5–10% 為初始目標）</li>
+        <li><strong>攝取下限</strong>：女性 1200、男性 1500 kcal/日（AHA/ACC/TOS 2013 減重飲食處方下限），低於估算 BMR 另提示。</li>
+        <li><strong>處方篩選</strong>：條件疊加套用硬性限制——膝痛、BMI≥30、≥65 歲排除高衝擊（跑、跳、球類）；心血管／腎臟病、高血壓、近期未規律運動、≥65 歲限制在 &lt;6 MET。符合條件群依「關節 → 心血管 → 高齡 → 新手 → 糖尿病」順序排列偏好，選出不同類型的 3 項（無條件時 4 項）。</li>
+        <li><strong>運動前篩檢</strong>依 ACSM 2015：有症狀 → 先就醫；未規律運動＋已知心血管／代謝（糖尿病）／腎臟疾病 → 先取得醫療評估；已規律運動＋已知疾病 → 可持續中等強度，進階高強度前先評估。高血壓視為危險因子而非「已知疾病」。</li>
+        <li><strong>運動量</strong>：WHO 2020 成人每週 150–300 分鐘中等（或 75–150 分鐘高強度）、肌力訓練每週 ≥2 天；65 歲以上每週 ≥3 天多元功能／平衡訓練。ACSM 2009：每週 &gt;250 分鐘與明顯減重及減重後維持有關。</li>
+        <li><strong>糖尿病</strong>（ADA Standards of Care 2026 第 5 章、Colberg 2016）：每週 ≥150 分鐘、≥3 天、不連續 2 天以上不活動；阻力訓練每週 2–3 次不連續；每 30 分鐘打斷久坐；用胰島素或促泌劑者運動前血糖 &lt;90 mg/dL 補充碳水化合物（Colberg 2016：15–30 g）；嚴重非增殖或增殖性視網膜病變避免高強度、跳躍、頭低位與憋氣。</li>
+      </ul>
+
+      <h3>3. MET 資料（2024 Adult Compendium，2026-10-10 核對）</h3>
+      <div class="table-scroll"><table class="met-table" id="met_table"></table></div>
+
+      <h3>4. 參考文獻</h3>
+      <ol>
+        <li>Herrmann SD, Willis EA, Ainsworth BE, et al. 2024 Adult Compendium of Physical Activities: a third update of the energy costs of human activities. <em>J Sport Health Sci</em>. 2024;13(1):6–12. doi:10.1016/j.jshs.2023.10.010；<a href="https://pacompendium.com/" target="_blank" rel="noopener">pacompendium.com</a>（含 corrected METs 說明）</li>
+        <li>Mifflin MD, St Jeor ST, Hill LA, et al. A new predictive equation for resting energy expenditure in healthy individuals. <em>Am J Clin Nutr</em>. 1990;51(2):241–247.</li>
+        <li>Riebe D, Franklin BA, Thompson PD, et al. Updating ACSM's recommendations for exercise preparticipation health screening. <em>Med Sci Sports Exerc</em>. 2015;47(11):2473–2479.</li>
+        <li>Donnelly JE, Blair SN, Jakicic JM, et al. ACSM position stand: appropriate physical activity intervention strategies for weight loss and prevention of weight regain for adults. <em>Med Sci Sports Exerc</em>. 2009;41(2):459–471.</li>
+        <li>Bull FC, Al-Ansari SS, Biddle S, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. <em>Br J Sports Med</em>. 2020;54(24):1451–1462.</li>
+        <li>American Diabetes Association Professional Practice Committee. Section 5, Standards of Care in Diabetes—2026. <em>Diabetes Care</em>. 2026;49(Suppl 1). doi:10.2337/dc26-S005</li>
+        <li>Colberg SR, Sigal RJ, Yardley JE, et al. Physical activity/exercise and diabetes: a position statement of the American Diabetes Association. <em>Diabetes Care</em>. 2016;39(11):2065–2079.</li>
+        <li>Jensen MD, Ryan DH, Apovian CM, et al. 2013 AHA/ACC/TOS guideline for the management of overweight and obesity in adults. <em>Circulation</em>. 2014;129(25 Suppl 2):S102–S138.</li>
+        <li>Hall KD, Sacks G, Chandramohan D, et al. Quantification of the effect of energy imbalance on bodyweight. <em>Lancet</em>. 2011;378(9793):826–837.</li>
+        <li>Kolasinski SL, Neogi T, Hochberg MC, et al. 2019 American College of Rheumatology/Arthritis Foundation guideline for the management of osteoarthritis of the hand, hip, and knee. <em>Arthritis Rheumatol</em>. 2020;72(2):220–233.</li>
+        <li>衛生福利部國民健康署：成人肥胖定義（BMI 18.5／24／27／30／35 分級）、每日減少 500 kcal 約每週減 0.5 kg、每日攝取不低於 1200 kcal。</li>
+      </ol>
+      <p style="margin-top:8px;">最後更新：2026-10-10。MET 為成人平均值，未反映個別效率、體能與環境差異；處方規則為整合上述指引的臨床經驗法則，未經前瞻驗證。</p>
+    </details>
 
     <footer>
       <p>⚠️ 本工具供健康促進、衛教與個人規劃參考，計算結果為依 MET 與公式推估的估計值，不能取代醫師、物理治療師、營養師或運動專業人員的個別評估。運動中出現胸痛、明顯喘促、暈眩等不適，應立即停止並就醫。</p>
@@ -1824,7 +1866,14 @@
       calcMode2();
     }
 
+    function renderMetTable() {
+      const CAT = { cardio_walking: '步行', cardio_running: '跑步', cycling: '自行車／器材', water: '水中', strength: '阻力／身心', sports: '球類', daily_chores: '家務' };
+      const rows = Object.entries(EX.DB).flatMap(([k, list]) => list.map(x => `<tr><td>${CAT[k]}</td><td>${x.name}</td><td>${x.met}</td><td>${x.code}</td></tr>`));
+      $('met_table').innerHTML = '<thead><tr><th>類別</th><th>活動</th><th>MET</th><th>代碼</th></tr></thead><tbody>' + rows.join('') + '</tbody>';
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      renderMetTable();
       updateExerciseOptions();
       paintConditions();
       calcMode2();
