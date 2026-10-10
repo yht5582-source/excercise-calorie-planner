@@ -227,6 +227,17 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
+    input.invalid {
+      border-color: var(--danger);
+      background-color: var(--danger-light);
+    }
+
+    .invalid-msg {
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
     input:focus,
     select:focus {
       outline: none;
@@ -637,7 +648,7 @@
 
             <div class="form-group">
               <label for="t1_weight">目前體重 (kg) <span class="input-hint">影響能量做功大小</span></label>
-              <input type="number" id="t1_weight" value="68" min="30" max="250" step="0.5" oninput="calcMode1()">
+              <input type="number" id="t1_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeight('t1_weight')">
             </div>
 
             <div class="form-group">
@@ -662,11 +673,11 @@
               <label for="t1_duration">持續時間 (分鐘)</label>
               <input type="number" id="t1_duration" value="45" min="1" max="600" step="5" oninput="calcMode1()">
               <div class="btn-group">
-                <button class="btn-chip" onclick="setT1Duration(15)">15分</button>
-                <button class="btn-chip" onclick="setT1Duration(30)">30分</button>
-                <button class="btn-chip active" onclick="setT1Duration(45)">45分</button>
-                <button class="btn-chip" onclick="setT1Duration(60)">60分</button>
-                <button class="btn-chip" onclick="setT1Duration(90)">90分</button>
+                <button class="btn-chip" data-min="15" onclick="setT1Duration(15)">15分</button>
+                <button class="btn-chip" data-min="30" onclick="setT1Duration(30)">30分</button>
+                <button class="btn-chip active" data-min="45" onclick="setT1Duration(45)">45分</button>
+                <button class="btn-chip" data-min="60" onclick="setT1Duration(60)">60分</button>
+                <button class="btn-chip" data-min="90" onclick="setT1Duration(90)">90分</button>
               </div>
             </div>
 
@@ -701,7 +712,7 @@
 
             <div class="stat-box-container">
               <div class="stat-box accent">
-                <div class="stat-label">相當於燃燒純脂肪</div>
+                <div class="stat-label">相當於脂肪組織</div>
                 <div class="stat-value" id="t1_fat_burn">0 <span class="stat-unit">g</span></div>
                 <div class="stat-sub">以每公斤脂肪組織 7700 kcal 換算</div>
               </div>
@@ -781,7 +792,7 @@
               <div class="input-row form-group">
                 <div>
                   <label for="t2_weight">目前體重 (kg)</label>
-                  <input type="number" id="t2_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeightAndCalc()">
+                  <input type="number" id="t2_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeight('t2_weight')">
                 </div>
                 <div>
                   <label>BMI 體位指標</label>
@@ -815,8 +826,8 @@
                     <span>⚪ 運動新手 / 久坐少動</span>
                   </label>
                   <label class="condition-option" id="cond_obese_wrap">
-                    <input type="checkbox" id="cond_obese" onchange="handleConditionChange('obese')">
-                    <span>🟣 高體重負荷 (BMI≥30)</span>
+                    <input type="checkbox" id="cond_obese" disabled>
+                    <span>🟣 高體重負荷（BMI≥30，自動判定）</span>
                   </label>
                 </div>
               </div>
@@ -1013,17 +1024,21 @@
 
     function setT1Duration(mins) {
       document.getElementById('t1_duration').value = mins;
-      const chips = document.querySelectorAll('.btn-chip');
-      chips.forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
       calcMode1();
     }
 
     function calcMode1() {
-      const weight = parseFloat(document.getElementById('t1_weight').value) || 65;
       const select = document.getElementById('t1_exercise');
-      const met = parseFloat(select.value) || 3.5;
-      const durationMin = parseFloat(document.getElementById('t1_duration').value) || 30;
+      const met = parseFloat(select.value);
+      const weight = readNum('t1_weight', 30, 250);
+      const durationMin = readNum('t1_duration', 1, 600);
+      document.querySelectorAll('.btn-chip').forEach(c => c.classList.toggle('active', Number(c.dataset.min) === durationMin));
+      if (!Number.isFinite(weight) || !Number.isFinite(durationMin)) {
+        ['t1_gross_cal', 't1_net_cal', 't1_fat_burn'].forEach(id => { document.getElementById(id).innerHTML = '—'; });
+        ['t1_food_rice', 't1_food_boba', 't1_food_apple', 't1_food_chicken'].forEach(id => { document.getElementById(id).textContent = '—'; });
+        document.getElementById('t1_intensity_text').innerHTML = '<span class="invalid-msg">請確認體重 30–250 kg、時間 1–600 分鐘</span>';
+        return;
+      }
       const durationHr = durationMin / 60;
 
       // Calculations
@@ -1059,15 +1074,26 @@
     }
 
     // ==================== TAB 2 LOGIC ====================
-    function syncWeightAndCalc() {
-      const w = document.getElementById('t2_weight').value;
-      document.getElementById('t1_weight').value = w;
+    function syncWeight(srcId) {
+      const w = document.getElementById(srcId).value;
+      document.getElementById(srcId === 't1_weight' ? 't2_weight' : 't1_weight').value = w;
+      calcMode1();
       calcMode2();
+    }
+
+    // 讀取數值並檢查範圍；不合理時回傳 NaN（不再默默改用預設值）
+    function readNum(id, min, max) {
+      const el = document.getElementById(id);
+      const v = parseFloat(el.value);
+      const ok = Number.isFinite(v) && v >= min && v <= max;
+      el.classList.toggle('invalid', !ok);
+      el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      return ok ? v : NaN;
     }
 
     function handleConditionChange(type) {
       const noneBox = document.getElementById('cond_none');
-      const otherIds = ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner', 'cond_obese'];
+      const otherIds = ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner'];
 
       if (type === 'none') {
         if (noneBox.checked) {
@@ -1076,6 +1102,8 @@
             document.getElementById(id + '_wrap').classList.remove('selected');
           });
           document.getElementById('cond_none_wrap').classList.add('selected');
+        } else if (!otherIds.some(id => document.getElementById(id).checked)) {
+          noneBox.checked = true; // 至少保留一個狀態
         }
       } else {
         if (document.getElementById('cond_' + type).checked) {
@@ -1098,11 +1126,18 @@
     function calcMode2() {
       // 1. Get input metrics
       const sex = document.getElementById('t2_sex').value;
-      const age = parseFloat(document.getElementById('t2_age').value) || 30;
-      const height = parseFloat(document.getElementById('t2_height').value) || 170;
-      const weight = parseFloat(document.getElementById('t2_weight').value) || 70;
-      const targetLossKg = parseFloat(document.getElementById('t2_target_loss').value) || 3;
-      const weeks = parseFloat(document.getElementById('t2_time_weeks').value) || 8;
+      const age = readNum('t2_age', 15, 100);
+      const height = readNum('t2_height', 100, 230);
+      const weight = readNum('t2_weight', 30, 250);
+      const targetLossKg = readNum('t2_target_loss', 0.5, 50);
+      const weeks = readNum('t2_time_weeks', 1, 104);
+      if ([age, height, weight, targetLossKg, weeks].some(v => !Number.isFinite(v))) {
+        const box = document.getElementById('safety_alert_box');
+        box.className = 'alert-banner alert-danger';
+        box.innerHTML = '<span>✏️</span><div><strong>輸入值超出範圍或空白。</strong> 請確認年齡 15–100 歲、身高 100–230 cm、體重 30–250 kg、減重目標 0.5–50 kg、時間 1–104 週。</div>';
+        document.getElementById('rx_container').innerHTML = '';
+        return;
+      }
       const daysPerWeek = parseInt(document.getElementById('t2_days_per_week').value) || 4;
       const exerciseSplitRatio = parseFloat(document.getElementById('t2_strategy').value) || 0.4;
 
@@ -1118,13 +1153,10 @@
 
       document.getElementById('t2_bmi_display').innerHTML = `<span style="color:${bmiColor}">${bmi.toFixed(1)} (${bmiCategory})</span>`;
 
-      // Auto check obesity tag if BMI >= 30
-      if (bmi >= 30 && !document.getElementById('cond_obese').checked) {
-        document.getElementById('cond_obese').checked = true;
-        document.getElementById('cond_obese_wrap').classList.add('selected');
-        document.getElementById('cond_none').checked = false;
-        document.getElementById('cond_none_wrap').classList.remove('selected');
-      }
+      // 高體重負荷由 BMI 自動判定（雙向，體重下降後會自動取消）
+      const obeseAuto = bmi >= 30;
+      document.getElementById('cond_obese').checked = obeseAuto;
+      document.getElementById('cond_obese_wrap').classList.toggle('selected', obeseAuto);
 
       // 3. Deficit Calculations
       // 1 kg fat tissue approx 7700 kcal
@@ -1371,7 +1403,17 @@
       document.getElementById('tabBtn2').classList.toggle('active', tabIndex === 2);
     }
 
+    function resetConditions() {
+      ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner'].forEach(id => {
+        document.getElementById(id).checked = false;
+        document.getElementById(id + '_wrap').classList.remove('selected');
+      });
+      document.getElementById('cond_none').checked = true;
+      document.getElementById('cond_none_wrap').classList.add('selected');
+    }
+
     function loadPreset(key) {
+      resetConditions();
       if (key === 'office_worker') {
         switchTab(2);
         document.getElementById('t2_sex').value = 'male';
@@ -1382,7 +1424,6 @@
         document.getElementById('t2_time_weeks').value = 8;
         document.getElementById('t2_days_per_week').value = '4';
         document.getElementById('t2_strategy').value = '0.4';
-        handleConditionChange('none');
       } else if (key === 'knee_friendly') {
         switchTab(2);
         document.getElementById('t2_sex').value = 'female';
@@ -1417,7 +1458,6 @@
         document.getElementById('t2_time_weeks').value = 6;
         document.getElementById('t2_days_per_week').value = '5';
         document.getElementById('t2_strategy').value = '0.5';
-        handleConditionChange('none');
       }
       calcMode2();
     }
