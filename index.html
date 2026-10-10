@@ -603,6 +603,201 @@
         border: 1px solid #ccc;
       }
     }
+
+    /* ---- v2 additions ---- */
+    .condition-option.auto {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    .condition-option.danger-opt {
+      grid-column: 1 / -1;
+      border-color: #FECACA;
+      background-color: #FFF7F7;
+    }
+
+    .condition-option.danger-opt.selected {
+      background-color: var(--danger-light);
+      border-color: var(--danger);
+    }
+
+    .sub-option {
+      grid-column: 1 / -1;
+      margin-left: 18px;
+      font-size: 0.8rem;
+    }
+
+    .stat-box-container.three {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 600px) {
+      .stat-box-container.three {
+        grid-template-columns: 1fr;
+      }
+      .input-row-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .tab-btn {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+      }
+    }
+
+    .alert-list .alert-banner {
+      margin-bottom: 10px;
+    }
+
+    .rx-card.infeasible {
+      border-color: #FECACA;
+      background: #FFFBFB;
+    }
+
+    .rx-meta {
+      font-size: 0.76rem;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .rx-meta.bad { color: var(--danger); }
+    .rx-meta.warn { color: #92400E; }
+    .rx-meta.ok { color: var(--success); }
+
+    .note-list {
+      padding-left: 18px;
+      font-size: 0.83rem;
+      color: #44403C;
+    }
+
+    .note-list li {
+      margin-bottom: 6px;
+    }
+
+    .note-group-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin: 10px 0 4px;
+      color: #1C1917;
+    }
+
+    .note-group-title:first-child {
+      margin-top: 0;
+    }
+
+    .muted-box {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 6px 0;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      border: 1px solid var(--primary);
+      background: white;
+      color: var(--primary-hover);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-light);
+    }
+
+    .action-btn:focus-visible,
+    .tab-btn:focus-visible,
+    .btn-chip:focus-visible,
+    .preset-btn:focus-visible {
+      outline: 3px solid rgba(217, 119, 6, 0.45);
+      outline-offset: 2px;
+    }
+
+    details.method {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #44403C;
+    }
+
+    details.method summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1C1917;
+    }
+
+    details.method h3 {
+      font-size: 0.92rem;
+      margin: 14px 0 6px;
+      color: #1C1917;
+    }
+
+    details.method ol,
+    details.method ul {
+      padding-left: 20px;
+    }
+
+    details.method li {
+      margin-bottom: 4px;
+    }
+
+    .met-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin-top: 6px;
+    }
+
+    .met-table th,
+    .met-table td {
+      border-bottom: 1px solid var(--border-color);
+      padding: 4px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .met-table th {
+      background: var(--card-header-bg);
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .copy-status {
+      font-size: 0.8rem;
+      color: var(--success);
+      align-self: center;
+    }
+
+    @media print {
+      .action-bar, details.method, .preset-bar, .tab-nav {
+        display: none !important;
+      }
+      #tabContent1 {
+        display: none !important;
+      }
+      #tabContent2 {
+        display: block !important;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .rx-card:hover {
+        box-shadow: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -613,33 +808,33 @@
     <header>
       <div class="app-badge">臨床運動處方與熱量平衡工具</div>
       <h1>運動熱量消耗估算與智慧減重處方系統</h1>
-      <p class="subtitle">依據身體活動代謝當量（MET）與醫學減重指引，為您計算熱量赤字並量身規劃個人化運動處方</p>
+      <p class="subtitle">依據身體活動代謝當量（MET）與成人減重、運動指引，計算熱量赤字並規劃個人化運動處方</p>
     </header>
 
     <!-- Preset Scenarios -->
     <div class="preset-bar">
-      <span class="preset-title">💡 快速載入情境範例：</span>
+      <span class="preset-title">💡 載入示例情境：</span>
       <button class="preset-btn" onclick="loadPreset('office_worker')">上班族 8 週減 3 公斤</button>
       <button class="preset-btn" onclick="loadPreset('knee_friendly')">膝關節保護 12 週減 5 公斤</button>
       <button class="preset-btn" onclick="loadPreset('beginner')">運動新手 16 週健康減脂</button>
-      <button class="preset-btn" onclick="loadPreset('active_fit')">有運動基礎 6 週雕塑 2 公斤</button>
+      <button class="preset-btn" onclick="loadPreset('dm_senior')">68 歲糖尿病 16 週減 4 公斤</button>
+      <button class="preset-btn" onclick="loadPreset('active_fit')">有運動基礎 6 週減 2 公斤</button>
     </div>
 
     <!-- Mode Tabs -->
-    <div class="tab-nav">
-      <button class="tab-btn active" id="tabBtn1" onclick="switchTab(1)">
-        <span>🔥 模式一：活動熱量即時估算器</span>
+    <div class="tab-nav" role="tablist" aria-label="模式">
+      <button class="tab-btn active" id="tabBtn1" role="tab" aria-selected="true" aria-controls="tabContent1" onclick="switchTab(1)" onkeydown="tabKey(event)">
+        <span>🔥 模式一：活動熱量即時估算</span>
       </button>
-      <button class="tab-btn" id="tabBtn2" onclick="switchTab(2)">
-        <span>🎯 模式二：目標導向減重運動推薦處方</span>
+      <button class="tab-btn" id="tabBtn2" role="tab" aria-selected="false" aria-controls="tabContent2" tabindex="-1" onclick="switchTab(2)" onkeydown="tabKey(event)">
+        <span>🎯 模式二：目標導向減重運動處方</span>
       </button>
     </div>
 
-    <!-- ==================== TAB 1: 運動熱量即時估算器 ==================== -->
-    <div id="tabContent1">
+    <!-- ==================== TAB 1 ==================== -->
+    <div id="tabContent1" role="tabpanel" aria-labelledby="tabBtn1">
       <div class="grid-2">
 
-        <!-- Left: Inputs -->
         <div class="card">
           <div class="card-header">
             <span>📝 運動與活動參數設定</span>
@@ -647,19 +842,19 @@
           <div class="card-body">
 
             <div class="form-group">
-              <label for="t1_weight">目前體重 (kg) <span class="input-hint">影響能量做功大小</span></label>
+              <label for="t1_weight">目前體重 (kg) <span class="input-hint">與模式二同步</span></label>
               <input type="number" id="t1_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeight('t1_weight')">
             </div>
 
             <div class="form-group">
               <label for="t1_category">活動大類</label>
               <select id="t1_category" onchange="updateExerciseOptions()">
-                <option value="cardio_walking">🚶‍♂️ 步行與日常走動</option>
-                <option value="cardio_running">🏃‍♀️ 跑步與慢跑</option>
-                <option value="cycling">🚴 自行車與單車</option>
+                <option value="cardio_walking">🚶 步行與爬樓梯</option>
+                <option value="cardio_running">🏃 跑步與慢跑</option>
+                <option value="cycling">🚴 自行車與有氧器材</option>
                 <option value="water">🏊 游泳與水中運動</option>
-                <option value="strength">🏋️ 阻力訓練與重訓</option>
-                <option value="sports">🏸 球類與休閒運動</option>
+                <option value="strength">🏋️ 阻力訓練與身心運動</option>
+                <option value="sports">🏸 球類運動</option>
                 <option value="daily_chores">🧹 家務與日常勞動</option>
               </select>
             </div>
@@ -683,13 +878,12 @@
 
             <div class="info-bubble">
               <strong>💡 什麼是 MET（代謝當量）？</strong><br>
-              1 MET 代表坐著休息時每公斤體重每小時消耗約 1 大卡。MET 越高代表運動強度越高。
+              1 MET 定義為安靜坐姿時的耗氧量（3.5 mL/kg/min，約每公斤體重每小時 1 大卡）。MET 越高代表活動的絕對強度越高；同一項運動對體能較差或年長者而言，相對強度會更高。
             </div>
 
           </div>
         </div>
 
-        <!-- Right: Real-time Results -->
         <div class="card">
           <div class="card-header">
             <span>📊 熱量消耗估算結果</span>
@@ -698,27 +892,27 @@
 
             <div class="stat-box-container">
               <div class="stat-box highlight">
-                <div class="stat-label">淨消耗熱量 (Net Burn)</div>
+                <div class="stat-label">淨消耗熱量 (Net)</div>
                 <div class="stat-value" id="t1_net_cal">0 <span class="stat-unit">kcal</span></div>
-                <div class="stat-sub">減重專屬：運動額外創造的赤字</div>
+                <div class="stat-sub">扣除同時段安靜代謝，運動額外創造的赤字</div>
               </div>
 
               <div class="stat-box">
-                <div class="stat-label">總消耗熱量 (Gross Burn)</div>
+                <div class="stat-label">總消耗熱量 (Gross)</div>
                 <div class="stat-value" id="t1_gross_cal">0 <span class="stat-unit">kcal</span></div>
-                <div class="stat-sub">含運動時段內之基礎代謝</div>
+                <div class="stat-sub">含運動時段內之安靜代謝</div>
               </div>
             </div>
 
             <div class="stat-box-container">
               <div class="stat-box accent">
-                <div class="stat-label">相當於脂肪組織</div>
+                <div class="stat-label">約相當於脂肪組織</div>
                 <div class="stat-value" id="t1_fat_burn">0 <span class="stat-unit">g</span></div>
-                <div class="stat-sub">以每公斤脂肪組織 7700 kcal 換算</div>
+                <div class="stat-sub">以每公斤脂肪組織約 7700 kcal 換算</div>
               </div>
 
               <div class="stat-box">
-                <div class="stat-label">運動強度評估</div>
+                <div class="stat-label">絕對強度分級</div>
                 <div class="stat-value" id="t1_intensity_text" style="font-size: 1.25rem; padding-top: 4px;">中等強度</div>
                 <div class="stat-sub" id="t1_met_display">MET: 6.0</div>
               </div>
@@ -726,30 +920,31 @@
 
             <div style="margin-top: 18px;">
               <div style="font-size: 0.85rem; font-weight: 700; color: #44403C; margin-bottom: 6px;">
-                🍚 相當於消耗了哪些食物的熱量？
+                🍚 淨消耗約等於哪些食物的熱量？
               </div>
               <div class="food-grid">
                 <div class="food-item">
                   <div class="food-icon">🍚</div>
-                  <div class="food-name">白飯 (碗)</div>
+                  <div class="food-name">白飯 (碗，約 280 kcal)</div>
                   <div class="food-val" id="t1_food_rice">0.0</div>
                 </div>
                 <div class="food-item">
                   <div class="food-icon">🧋</div>
-                  <div class="food-name">全糖珍奶 (杯)</div>
+                  <div class="food-name">全糖珍奶 (大杯，約 550 kcal)</div>
                   <div class="food-val" id="t1_food_boba">0.0</div>
                 </div>
                 <div class="food-item">
                   <div class="food-icon">🍎</div>
-                  <div class="food-name">中型蘋果 (顆)</div>
+                  <div class="food-name">蘋果 (小顆，約 60 kcal)</div>
                   <div class="food-val" id="t1_food_apple">0.0</div>
                 </div>
                 <div class="food-item">
                   <div class="food-icon">🍗</div>
-                  <div class="food-name">即食雞胸 (片)</div>
+                  <div class="food-name">即食雞胸 (片，約 130 kcal)</div>
                   <div class="food-val" id="t1_food_chicken">0.0</div>
                 </div>
               </div>
+              <div class="stat-sub" style="text-align:left; margin-top:8px;">食物熱量為常見份量的概估值，實際依品牌與份量而異。</div>
             </div>
 
           </div>
@@ -758,13 +953,17 @@
       </div>
     </div>
 
-    <!-- ==================== TAB 2: 目標導向減重運動推薦處方 ==================== -->
-    <div id="tabContent2" style="display: none;">
+    <!-- ==================== TAB 2 ==================== -->
+    <div id="tabContent2" role="tabpanel" aria-labelledby="tabBtn2" style="display: none;">
+      <div class="action-bar">
+        <button class="action-btn" onclick="copySummary()">📋 複製處方摘要</button>
+        <button class="action-btn" onclick="window.print()">🖨️ 列印衛教單</button>
+        <span class="copy-status" id="copy_status" aria-live="polite"></span>
+      </div>
       <div class="grid-2">
 
-        <!-- Left: Inputs & Targets -->
+        <!-- Left -->
         <div>
-          <!-- Bio & Health Card -->
           <div class="card">
             <div class="card-header">
               <span>👤 1. 個人生理與健康狀況</span>
@@ -795,15 +994,23 @@
                   <input type="number" id="t2_weight" value="78" min="30" max="250" step="0.5" oninput="syncWeight('t2_weight')">
                 </div>
                 <div>
-                  <label>BMI 體位指標</label>
-                  <div id="t2_bmi_display" style="padding: 9px 12px; background: #F5F2EB; border-radius: 8px; font-weight: 700; font-size: 0.95rem; color: #1C1917;">
-                    26.4 (過重)
-                  </div>
+                  <label>BMI（國健署分級）</label>
+                  <div id="t2_bmi_display" style="padding: 9px 12px; background: #F5F2EB; border-radius: 8px; font-weight: 700; font-size: 0.95rem; color: #1C1917;">—</div>
                 </div>
               </div>
 
               <div class="form-group">
-                <label>健康狀況與運動限制 (自動過濾運動風險)</label>
+                <label for="t2_activity">目前日常活動量 <span class="input-hint">不含本計畫新增的運動</span></label>
+                <select id="t2_activity" onchange="calcMode2()">
+                  <option value="1.2" selected>久坐（辦公室工作、幾乎不運動）</option>
+                  <option value="1.375">輕度活動（每週輕度運動 1–3 天）</option>
+                  <option value="1.55">中度活動（每週中等運動 3–5 天）</option>
+                  <option value="1.725">高度活動（每週激烈運動 6–7 天或勞力工作）</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>健康狀況與運動限制 <span class="input-hint">可複選，條件會疊加</span></label>
                 <div class="condition-grid">
                   <label class="condition-option selected" id="cond_none_wrap">
                     <input type="checkbox" id="cond_none" checked onchange="handleConditionChange('none')">
@@ -811,23 +1018,39 @@
                   </label>
                   <label class="condition-option" id="cond_knee_wrap">
                     <input type="checkbox" id="cond_knee" onchange="handleConditionChange('knee')">
-                    <span>🟡 膝關節/下肢退化疼痛</span>
+                    <span>🟡 膝關節／下肢退化疼痛</span>
                   </label>
                   <label class="condition-option" id="cond_cvd_wrap">
                     <input type="checkbox" id="cond_cvd" onchange="handleConditionChange('cvd')">
-                    <span>🟠 心血管/高血壓病史</span>
+                    <span>🟠 心血管疾病／慢性腎臟病</span>
+                  </label>
+                  <label class="condition-option" id="cond_htn_wrap">
+                    <input type="checkbox" id="cond_htn" onchange="handleConditionChange('htn')">
+                    <span>🟠 高血壓</span>
                   </label>
                   <label class="condition-option" id="cond_dm_wrap">
                     <input type="checkbox" id="cond_dm" onchange="handleConditionChange('dm')">
-                    <span>🔵 糖尿病 / 代謝異常</span>
+                    <span>🔵 糖尿病</span>
                   </label>
                   <label class="condition-option" id="cond_beginner_wrap">
                     <input type="checkbox" id="cond_beginner" onchange="handleConditionChange('beginner')">
-                    <span>⚪ 運動新手 / 久坐少動</span>
+                    <span>⚪ 近 3 個月未規律運動 / 久坐</span>
                   </label>
-                  <label class="condition-option" id="cond_obese_wrap">
+                  <label class="condition-option sub-option" id="cond_insulin_wrap" style="display:none;">
+                    <input type="checkbox" id="cond_insulin" onchange="handleConditionChange('insulin')">
+                    <span>↳ 使用胰島素或 SU／glinide 類藥物（低血糖風險）</span>
+                  </label>
+                  <label class="condition-option auto" id="cond_obese_wrap">
                     <input type="checkbox" id="cond_obese" disabled>
                     <span>🟣 高體重負荷（BMI≥30，自動判定）</span>
+                  </label>
+                  <label class="condition-option auto" id="cond_older_wrap">
+                    <input type="checkbox" id="cond_older" disabled>
+                    <span>🟤 65 歲以上（自動判定）</span>
+                  </label>
+                  <label class="condition-option danger-opt" id="cond_symptoms_wrap">
+                    <input type="checkbox" id="cond_symptoms" onchange="handleConditionChange('symptoms')">
+                    <span>🚩 活動時曾有胸痛／胸悶、暈厥、不明原因的喘或心悸、腳踝腫脹，或走路小腿痛（跛行）</span>
                   </label>
                 </div>
               </div>
@@ -835,7 +1058,6 @@
             </div>
           </div>
 
-          <!-- Goal & Plan Card -->
           <div class="card">
             <div class="card-header">
               <span>🎯 2. 減重目標與排程規劃</span>
@@ -854,23 +1076,24 @@
               </div>
 
               <div class="form-group">
-                <label for="t2_days_per_week">每週預計可運動天數</label>
+                <label for="t2_days_per_week">每週可安排有氧運動天數</label>
                 <select id="t2_days_per_week" onchange="calcMode2()">
-                  <option value="2">每週 2 天（時間較緊湊）</option>
-                  <option value="3">每週 3 天（黃金入門頻率）</option>
-                  <option value="4" selected>每週 4 天（規律減脂推薦）</option>
-                  <option value="5">每週 5 天（積極進階）</option>
-                  <option value="6">每週 6 天（高頻率）</option>
+                  <option value="2">每週 2 天</option>
+                  <option value="3">每週 3 天</option>
+                  <option value="4" selected>每週 4 天</option>
+                  <option value="5">每週 5 天</option>
+                  <option value="6">每週 6 天</option>
+                  <option value="7">每週 7 天</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="t2_strategy">熱量赤字分攤策略</label>
                 <select id="t2_strategy" onchange="calcMode2()">
-                  <option value="0.4" selected>🏆 雙管齊下：運動分攤 40% + 飲食減少 60%（臨床推薦最易持久）</option>
-                  <option value="0.3">🥗 飲食為主：運動分攤 30% + 飲食減少 70%</option>
-                  <option value="0.5">🏃 均衡平均：運動分攤 50% + 飲食減少 50%</option>
-                  <option value="1.0">⚡ 全靠運動：運動分攤 100%（不改變飲食，訓練量較大）</option>
+                  <option value="0.3">🥗 飲食為主：運動 30% + 飲食 70%</option>
+                  <option value="0.4" selected>🏆 雙管齊下：運動 40% + 飲食 60%</option>
+                  <option value="0.5">🏃 均分：運動 50% + 飲食 50%</option>
+                  <option value="1.0">⚡ 全靠運動：運動 100%（不改變飲食）</option>
                 </select>
               </div>
 
@@ -878,45 +1101,70 @@
           </div>
         </div>
 
-        <!-- Right: Prescription & Feasibility Output -->
+        <!-- Right -->
         <div>
-
-          <!-- Feasibility & Safety Dashboard -->
           <div class="card">
             <div class="card-header">
-              <span>🩺 減重速度與安全性診斷</span>
+              <span>🩺 減重速度、熱量與安全性</span>
             </div>
             <div class="card-body">
-              <div id="safety_alert_box"></div>
+              <div id="alert_list" class="alert-list"></div>
 
-              <div class="stat-box-container" style="margin-bottom: 0;">
+              <div class="stat-box-container three" style="margin-bottom: 0;">
                 <div class="stat-box">
                   <div class="stat-label">每週減重速率</div>
-                  <div class="stat-value" id="t2_weekly_rate">0.50 <span class="stat-unit">kg/週</span></div>
-                  <div class="stat-sub" id="t2_rate_verdict">安全標準速度</div>
+                  <div class="stat-value" id="t2_weekly_rate">—</div>
+                  <div class="stat-sub" id="t2_rate_verdict"></div>
                 </div>
-
                 <div class="stat-box highlight">
                   <div class="stat-label">每日總熱量赤字</div>
-                  <div class="stat-value" id="t2_daily_deficit">550 <span class="stat-unit">kcal</span></div>
-                  <div class="stat-sub" id="t2_split_desc">運動 220 + 飲食 330</div>
+                  <div class="stat-value" id="t2_daily_deficit">—</div>
+                  <div class="stat-sub" id="t2_split_desc"></div>
+                </div>
+                <div class="stat-box accent">
+                  <div class="stat-label">每日建議攝取</div>
+                  <div class="stat-value" id="t2_intake">—</div>
+                  <div class="stat-sub" id="t2_energy_desc"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Tailored Exercise Prescription Cards -->
           <div class="card">
             <div class="card-header">
-              <span>📋 量身推薦運動處方（任選一或交替進行）</span>
+              <span>🚦 運動前安全篩檢（ACSM 2015）</span>
             </div>
             <div class="card-body">
+              <div id="screen_box"></div>
+            </div>
+          </div>
 
-              <div id="rx_container">
-                <!-- Dynamically populated -->
-              </div>
+          <div class="card">
+            <div class="card-header">
+              <span>📋 有氧運動處方（任選一項或交替進行）</span>
+            </div>
+            <div class="card-body">
+              <div id="rx_container"></div>
+              <div id="weekly_box"></div>
+            </div>
+          </div>
 
-              <!-- Phased Guidance -->
+          <div class="card">
+            <div class="card-header">
+              <span>🏋️ 肌力與平衡訓練</span>
+            </div>
+            <div class="card-body">
+              <div id="strength_box"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span>📌 依健康狀況的注意事項</span>
+            </div>
+            <div class="card-body">
+              <div id="notes_box"></div>
+
               <div style="margin-top: 18px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                 <div style="font-size: 0.85rem; font-weight: 700; color: #1C1917; margin-bottom: 8px;">
                   📅 漸進式執行階段建議
@@ -924,17 +1172,21 @@
                 <div class="timeline">
                   <div class="timeline-item">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-title">第 1～2 週：習慣建立與關節適應期</div>
-                    <div class="timeline-desc">建議先執行上述處方時間的 60%～70%，著重動作標準度與心肺適應。</div>
+                    <div class="timeline-title">第 1～2 週：習慣建立與適應期</div>
+                    <div class="timeline-desc">先執行處方時間的 60%～70%，著重動作正確與身體適應；久坐者可從每次 10–15 分鐘開始。</div>
                   </div>
                   <div class="timeline-item">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-title">第 3 週起：標準燃脂目標期</div>
-                    <div class="timeline-desc">達到建議之每週頻率與單次時間，每週定期測量體重與體脂。</div>
+                    <div class="timeline-title">第 3～4 週：逐步加量</div>
+                    <div class="timeline-desc">每週增加時間約 10%，先加時間與頻率，再考慮提高強度。</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-title">之後：達標與追蹤</div>
+                    <div class="timeline-desc">達到處方頻率與時間，每週固定時間量體重、每月量腰圍；體重停滯 2–4 週時重新評估攝取與活動量。</div>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -943,147 +1195,327 @@
       </div>
     </div>
 
-    <!-- Footer -->
+    <!--METHOD-->
+
     <footer>
-      <p>⚠️ 衛教提醒：本工具之計算結果基於運動代謝當量（MET）與臨床統計估算，個人實際代謝率、肌肉量、體溫調節與心肺狀況可能略有差異。若有特殊慢性病或心血管不適，請先諮詢醫師或物理治療師。</p>
-      <p style="margin-top: 4px;">Designed with Warm Clinical Style for Health Promotion</p>
+      <p>⚠️ 本工具供健康促進、衛教與個人規劃參考，計算結果為依 MET 與公式推估的估計值，不能取代醫師、物理治療師、營養師或運動專業人員的個別評估。運動中出現胸痛、明顯喘促、暈眩等不適，應立即停止並就醫。</p>
     </footer>
 
   </div>
 
   <script>
-    // ==================== MET DATABASE ====================
-    const EXERCISE_DB = {
-      cardio_walking: [
-        { id: 'w_slow', name: '慢速散步 / 生活走動 (約 3.2 km/h)', met: 2.5, impact: 'low', tags: ['低衝擊', '關節友善', '新手'] },
-        { id: 'w_moderate', name: '平地中速健走 (約 4.8 km/h)', met: 3.5, impact: 'low', tags: ['日常推薦', '低衝擊'] },
-        { id: 'w_brisk', name: '平地快走 / 競走 (約 6.0 km/h)', met: 4.5, impact: 'low', tags: ['有效燃脂', '低衝擊'] },
-        { id: 'w_uphill', name: '坡度快走 / 輕度登山', met: 6.0, impact: 'mod', tags: ['心肺強化', '肌力'] },
-        { id: 'w_stairs', name: '爬樓梯 (上樓)', met: 8.0, impact: 'high', tags: ['高強度', '關節注意'] }
-      ],
-      cardio_running: [
-        { id: 'r_jog_slow', name: '超慢跑 / 輕鬆慢跑 (約 6.5-7 km/h)', met: 6.0, impact: 'mod', tags: ['有氧燃脂', '心肺'] },
-        { id: 'r_jog_mod', name: '標準慢跑 (約 8.0 km/h)', met: 8.0, impact: 'high', tags: ['高效燃脂', '心肺'] },
-        { id: 'r_run_fast', name: '快速跑步 (約 10.0 km/h)', met: 10.0, impact: 'high', tags: ['高強度', '運動員'] },
-        { id: 'r_hiit', name: '高強度間歇跑 (HIIT Sprint)', met: 11.5, impact: 'high', tags: ['高強度', '後燃效應'] }
-      ],
-      cycling: [
-        { id: 'c_leisure', name: '休閒騎自行車 (約 15 km/h)', met: 4.0, impact: 'low', tags: ['低衝擊', '通勤'] },
-        { id: 'c_stationary_light', name: '固定式健身車 (輕阻力約 50W)', met: 4.0, impact: 'low', tags: ['關節友善', '心血管推薦'] },
-        { id: 'c_stationary_mod', name: '固定式健身車 (中阻力約 100W)', met: 5.5, impact: 'low', tags: ['減脂推薦', '低衝擊'] },
-        { id: 'c_outdoor_brisk', name: '公路單車中高速 (約 20-22 km/h)', met: 8.0, impact: 'low', tags: ['高效有氧'] },
-        { id: 'c_spinning', name: '飛輪有氧課程 (高強度)', met: 8.5, impact: 'mod', tags: ['高強度', '間歇'] }
-      ],
-      water: [
-        { id: 'sw_walk', name: '水中健走 / 水中有氧 (Water Aerobics)', met: 4.5, impact: 'low', tags: ['關節首選', '肥胖友善', '復健'] },
-        { id: 'sw_breast_mod', name: '蛙式游泳 (中等休閒速度)', met: 5.5, impact: 'low', tags: ['全身肌群', '關節零負擔'] },
-        { id: 'sw_free_mod', name: '自由式游泳 (中等速度持續游)', met: 7.0, impact: 'low', tags: ['高效燃脂', '低衝擊'] },
-        { id: 'sw_free_fast', name: '自由式快游 / 蝶式 (競速強度)', met: 9.8, impact: 'mod', tags: ['高強度'] }
-      ],
-      strength: [
-        { id: 'st_calisthenics_light', name: '輕度徒手肌力 / 伸展 / 瑜伽', met: 3.0, impact: 'low', tags: ['柔韌度', '核心'] },
-        { id: 'st_pilates', name: '皮拉提斯 / 核心肌群訓練', met: 3.8, impact: 'low', tags: ['核心穩定', '低衝擊'] },
-        { id: 'st_weight_mod', name: '器械重量訓練 (中等組間休息)', met: 4.0, impact: 'low', tags: ['維持肌肉', '防代謝下降'] },
-        { id: 'st_circuit', name: '循環肌力訓練 / 徒手深蹲伏地挺身', met: 5.5, impact: 'mod', tags: ['肌耐力', '代謝提升'] },
-        { id: 'st_kettlebell', name: '壺鈴訓練 / 綜合體能 (CrossFit)', met: 8.0, impact: 'mod', tags: ['高強度', '肌力爆發'] }
-      ],
-      sports: [
-        { id: 'sp_table_tennis', name: '桌球 / 乒乓球', met: 4.0, impact: 'low', tags: ['敏捷性', '趣味'] },
-        { id: 'sp_badminton_rec', name: '羽毛球 (一般休閒對打)', met: 4.5, impact: 'mod', tags: ['全身活動'] },
-        { id: 'sp_badminton_comp', name: '羽毛球 (競賽激烈移動)', met: 7.0, impact: 'high', tags: ['高消耗', '跳躍'] },
-        { id: 'sp_tennis', name: '網球單打', met: 7.3, impact: 'high', tags: ['心肺', '爆發力'] },
-        { id: 'sp_basketball', name: '籃球全場競賽', met: 8.0, impact: 'high', tags: ['高強度', '跳躍'] }
-      ],
-      daily_chores: [
-        { id: 'ch_desk', name: '站姿辦公 / 輕度伸展', met: 1.8, impact: 'low', tags: ['打破久坐'] },
-        { id: 'ch_light', name: '吸塵 / 拖地 / 擦窗戶', met: 3.0, impact: 'low', tags: ['日常活動'] },
-        { id: 'ch_gardening', name: '園藝除草 / 搬運輕量物品', met: 4.0, impact: 'mod', tags: ['全身活動'] },
-        { id: 'ch_heavy_move', name: '搬重物上下樓梯 / 整理家具', met: 6.5, impact: 'high', tags: ['高勞動'] }
-      ]
-    };
+    /*ENGINE-START*/
+    const EX = (() => {
+      const KCAL_PER_KG = 7700;
 
-    // ==================== TAB 1 LOGIC ====================
-    function updateExerciseOptions() {
-      const cat = document.getElementById('t1_category').value;
-      const select = document.getElementById('t1_exercise');
-      select.innerHTML = '';
+      // MET 資料庫：數值與 5 位數代碼取自 2024 Adult Compendium of Physical Activities（pacompendium.com，2026-10-10 核對）
+      const DB = {
+        cardio_walking: [
+          { id: 'w_2_0', name: '慢速散步（約 3.2–3.9 km/h）', met: 2.8, code: '17152' },
+          { id: 'w_3_0', name: '平地健走（約 4.5–5.5 km/h）', met: 3.8, code: '17190' },
+          { id: 'w_3_5', name: '平地快走（約 5.6–6.3 km/h）', met: 4.8, code: '17200' },
+          { id: 'w_4_0', name: '平地很快走（約 6.4–7.1 km/h）', met: 5.5, code: '17220' },
+          { id: 'w_hike', name: '郊山步道 / 山坡健走（一般速度、無負重）', met: 5.3, code: '17082' },
+          { id: 'w_stairs_slow', name: '爬樓梯（慢速）', met: 4.5, code: '17133' },
+          { id: 'w_stairs_fast', name: '爬樓梯（快速、一次一階）', met: 9.3, code: '17134' }
+        ],
+        cardio_running: [
+          { id: 'r_jog', name: '慢跑（一般、自選速度）', met: 7.5, code: '12020' },
+          { id: 'r_8', name: '跑步（約 8.0–8.4 km/h）', met: 8.5, code: '12030' },
+          { id: 'r_9_7', name: '跑步（約 9.7–10.1 km/h）', met: 9.3, code: '12050' },
+          { id: 'r_10_8', name: '跑步（約 10.8 km/h）', met: 10.5, code: '12060' }
+        ],
+        cycling: [
+          { id: 'c_leisure', name: '休閒騎自行車（<16 km/h）', met: 4.0, code: '01010' },
+          { id: 'c_16_19', name: '自行車（16–19 km/h，輕鬆）', met: 6.8, code: '01020' },
+          { id: 'c_19_22', name: '自行車（19–22 km/h，中等）', met: 8.0, code: '01030' },
+          { id: 'c_st_50', name: '固定式健身車（約 50 W，輕度）', met: 4.0, code: '01214' },
+          { id: 'c_st_light', name: '固定式健身車（約 60 W，輕至中等）', met: 5.0, code: '01216' },
+          { id: 'c_st_75', name: '固定式健身車（約 70–80 W）', met: 5.8, code: '01218' },
+          { id: 'c_st_mod', name: '固定式健身車（約 90–100 W，中高強度）', met: 6.0, code: '01220' },
+          { id: 'c_st_vig', name: '固定式健身車（約 101–125 W）', met: 6.8, code: '01224' },
+          { id: 'c_spin', name: '飛輪有氧課程', met: 9.0, code: '01270' },
+          { id: 'c_elliptical', name: '橢圓機（中等強度）', met: 5.0, code: '02048' }
+        ],
+        water: [
+          { id: 'sw_aerobics', name: '水中有氧 / 水中體操', met: 5.5, code: '18355' },
+          { id: 'sw_walk', name: '水中健走（中等強度）', met: 4.8, code: '18368' },
+          { id: 'sw_breast', name: '蛙式（休閒）', met: 5.3, code: '18265' },
+          { id: 'sw_free_mod', name: '自由式（慢速、休閒）', met: 5.8, code: '18240' },
+          { id: 'sw_free_fast', name: '自由式（快速、費力）', met: 9.8, code: '18230' }
+        ],
+        strength: [
+          { id: 'st_yoga', name: '哈達瑜伽', met: 2.3, code: '02150' },
+          { id: 'st_pilates', name: '皮拉提斯（一般）', met: 2.8, code: '02105' },
+          { id: 'st_taichi', name: '太極拳 / 氣功', met: 3.3, code: '15670' },
+          { id: 'st_weight', name: '重量訓練（多項動作、每組 8–15 下）', met: 3.5, code: '02054' },
+          { id: 'st_circuit', name: '循環訓練（中等強度）', met: 5.0, code: '02035' },
+          { id: 'st_kettlebell', name: '循環訓練含壺鈴（高強度、少休息）', met: 7.5, code: '02040' },
+          { id: 'st_hiit', name: '高強度間歇（波比跳、登山者、深蹲跳）', met: 11.0, code: '02214' }
+        ],
+        sports: [
+          { id: 'sp_table_tennis', name: '桌球', met: 4.0, code: '15660' },
+          { id: 'sp_badminton', name: '羽球（休閒單雙打）', met: 5.5, code: '15030' },
+          { id: 'sp_badminton_comp', name: '羽球（競賽）', met: 7.0, code: '15020' },
+          { id: 'sp_tennis', name: '網球單打', met: 8.0, code: '15690' },
+          { id: 'sp_basketball', name: '籃球比賽', met: 8.0, code: '15040' }
+        ],
+        daily_chores: [
+          { id: 'ch_stand', name: '站立辦公（打字、電腦工作）', met: 1.3, code: '11583' },
+          { id: 'ch_vacuum', name: '吸塵（一般、中等費力）', met: 3.0, code: '05043' },
+          { id: 'ch_mop', name: '拖地（站立、中等費力）', met: 3.5, code: '05021' },
+          { id: 'ch_garden', name: '園藝除草（中等費力）', met: 4.5, code: '08240' },
+          { id: 'ch_move', name: '搬家具 / 搬箱子', met: 5.8, code: '05120' },
+          { id: 'ch_move_up', name: '搬箱子或家具上樓', met: 9.0, code: '05150' }
+        ]
+      };
+      const BY_ID = {};
+      Object.values(DB).forEach(list => list.forEach(x => { BY_ID[x.id] = x; }));
 
-      const items = EXERCISE_DB[cat] || [];
-      items.forEach((item, index) => {
-        const opt = document.createElement('option');
-        opt.value = item.met;
-        opt.dataset.impact = item.impact;
-        opt.dataset.id = item.id;
-        opt.textContent = `${item.name} (MET: ${item.met})`;
-        if (index === 0) opt.selected = true;
-        select.appendChild(opt);
-      });
+      // 處方候選：MET 一律引用 DB，避免前後不一致。impact：none 不負重 / low 低衝擊 / high 衝擊或跳躍
+      const POOL = [
+        { id: 'w_3_5', kind: 'walk', icon: '🚶', impact: 'low', tag: '日常基礎有氧',
+          g: '抬頭挺胸、步伐輕快；以「說話測試」控制強度：會微喘但仍能說完整句子。可拆成每次 ≥10 分鐘累積。' },
+        { id: 'c_st_light', kind: 'bike', icon: '🚴', impact: 'none', tag: '不負重・好控制',
+          g: '座椅高度調到踏板踩到最低點時膝蓋仍微彎（約 25–35°），輕阻力、踏頻 60–80 rpm，不站立重踩。' },
+        { id: 'c_st_mod', kind: 'bike', icon: '🚴', impact: 'none', tag: '有效燃脂',
+          g: '中等阻力持續踩踏；可採 3 分鐘穩定＋1 分鐘稍快的交替方式，提升耐力。' },
+        { id: 'sw_aerobics', kind: 'water', icon: '🏊', impact: 'none', tag: '關節友善首選',
+          g: '水深及胸時浮力可明顯減輕下肢負重；在水中大步走並配合擺臂，水溫以 28–32°C 較舒適。' },
+        { id: 'sw_breast', kind: 'water', icon: '🏊', impact: 'none', tag: '全身有氧',
+          g: '節奏均勻、微喘即可，勿衝刺；膝關節不適者可改用自由式踢腿或浮板，避免蛙式踢腿扭轉膝蓋。' },
+        { id: 'sw_free_mod', kind: 'water', icon: '🏊', impact: 'none', tag: '全身肌群',
+          g: '以可持續的速度連續游，必要時每 50–100 公尺短暫休息；無關節衝擊且能動員上半身與核心。' },
+        { id: 'c_elliptical', kind: 'elliptical', icon: '⛷️', impact: 'low', tag: '低衝擊全身',
+          g: '雙腳不離踏板，衝擊低於跑步；扶手可輕扶保持平衡，逐步減少依賴。' },
+        { id: 'r_8', kind: 'run', icon: '🏃', impact: 'high', tag: '高效心肺',
+          g: '先以快走與慢跑交替（例如走 2 分鐘＋跑 1 分鐘）建立耐受度；穿著合適跑鞋，避免一次大幅增加里程。' },
+        { id: 'c_spin', kind: 'bike', icon: '🚴', impact: 'low', tag: '高強度間歇',
+          g: '團體課強度常偏高，初次參加可降低阻力、減少站立踩踏段落。' },
+        { id: 'sp_badminton', kind: 'ball', icon: '🏸', impact: 'high', tag: '趣味社交',
+          g: '包含急停與跳躍，運動前充分暖身；適合與朋友一起提升持續意願。' },
+        { id: 'st_taichi', kind: 'mindbody', icon: '🧘', impact: 'low', tag: '平衡與柔軟度',
+          g: '強度低、熱量消耗有限，但能改善平衡、預防跌倒，適合作為搭配或暖身。' }
+      ];
 
-      calcMode1();
-    }
+      // 各條件的偏好順序（第一個符合的條件群優先）；硬性限制另外處理
+      const PREF = {
+        joint: ['sw_aerobics', 'c_st_light', 'sw_free_mod', 'c_elliptical', 'w_3_5', 'c_st_mod'],
+        cardio: ['w_3_5', 'c_st_light', 'sw_breast', 'sw_aerobics', 'c_elliptical', 'st_taichi'],
+        older: ['w_3_5', 'c_st_light', 'sw_aerobics', 'st_taichi', 'c_elliptical'],
+        beginner: ['w_3_5', 'c_st_light', 'sw_aerobics', 'c_elliptical'],
+        dm: ['w_3_5', 'c_st_mod', 'sw_free_mod', 'c_elliptical', 'r_8'],
+        general: ['r_8', 'sw_free_mod', 'c_spin', 'sp_badminton', 'c_st_mod', 'c_elliptical']
+      };
 
-    function setT1Duration(mins) {
-      document.getElementById('t1_duration').value = mins;
-      calcMode1();
-    }
+      const round = (x, d = 0) => { const f = 10 ** d; return Math.round(x * f) / f; };
 
-    function calcMode1() {
-      const select = document.getElementById('t1_exercise');
-      const met = parseFloat(select.value);
-      const weight = readNum('t1_weight', 30, 250);
-      const durationMin = readNum('t1_duration', 1, 600);
-      document.querySelectorAll('.btn-chip').forEach(c => c.classList.toggle('active', Number(c.dataset.min) === durationMin));
-      if (!Number.isFinite(weight) || !Number.isFinite(durationMin)) {
-        ['t1_gross_cal', 't1_net_cal', 't1_fat_burn'].forEach(id => { document.getElementById(id).innerHTML = '—'; });
-        ['t1_food_rice', 't1_food_boba', 't1_food_apple', 't1_food_chicken'].forEach(id => { document.getElementById(id).textContent = '—'; });
-        document.getElementById('t1_intensity_text').innerHTML = '<span class="invalid-msg">請確認體重 30–250 kg、時間 1–600 分鐘</span>';
-        return;
+      function bmi(w, hCm) { return w / ((hCm / 100) ** 2); }
+
+      // 國健署成人體位：<18.5 過輕；18.5–<24 正常；24–<27 過重；27–<30 輕度肥胖；30–<35 中度；≥35 重度
+      function bmiCat(b) {
+        if (b < 18.5) return { key: 'under', label: '過輕', color: '#2563EB' };
+        if (b < 24) return { key: 'normal', label: '正常範圍', color: '#059669' };
+        if (b < 27) return { key: 'over', label: '過重', color: '#D97706' };
+        if (b < 30) return { key: 'ob1', label: '輕度肥胖', color: '#EA580C' };
+        if (b < 35) return { key: 'ob2', label: '中度肥胖', color: '#DC2626' };
+        return { key: 'ob3', label: '重度肥胖', color: '#B91C1C' };
       }
-      const durationHr = durationMin / 60;
 
-      // Calculations
-      // Gross calories = MET * weight * hr
-      const gross = met * weight * durationHr;
-      // Net calories = (MET - 1) * weight * hr
-      const net = Math.max(0, (met - 1) * weight * durationHr);
+      // Mifflin-St Jeor
+      function bmr(sex, age, hCm, w) {
+        return 10 * w + 6.25 * hCm - 5 * age + (sex === 'male' ? 5 : -161);
+      }
 
-      // Fat burn (approx 7.7 kcal per g of body fat tissue)
-      const fatGrams = net / 7.7;
+      function intensity(met) {
+        if (met >= 6) return { key: 'vigorous', label: '高強度' };
+        if (met >= 3) return { key: 'moderate', label: '中等強度' };
+        return { key: 'light', label: '低強度' };
+      }
 
-      // Update UI
-      document.getElementById('t1_gross_cal').innerHTML = `${Math.round(gross)} <span class="stat-unit">kcal</span>`;
-      document.getElementById('t1_net_cal').innerHTML = `${Math.round(net)} <span class="stat-unit">kcal</span>`;
-      document.getElementById('t1_fat_burn').innerHTML = `${fatGrams.toFixed(1)} <span class="stat-unit">g</span>`;
+      // 總消耗 = MET × 體重 × 時間（1 MET ≈ 1 kcal/kg/h）；淨消耗 = 總消耗 − 同時段安靜代謝
+      // restPerMin 未提供時以 1 MET（體重/60 kcal/min）代表安靜代謝
+      function burn(met, w, minutes, restPerMin) {
+        const rest = restPerMin == null ? w / 60 : restPerMin;
+        const gross = met * (w / 60) * minutes;
+        return { gross, net: Math.max(0, gross - rest * minutes), netPerMin: Math.max(0, met * w / 60 - rest) };
+      }
 
-      // Intensity level
-      let intensity = '低強度 (輕度活動)';
-      if (met >= 6.0) intensity = '高強度 (心肺激烈)';
-      else if (met >= 3.0) intensity = '中等強度 (有氧燃脂)';
-      document.getElementById('t1_intensity_text').textContent = intensity;
-      document.getElementById('t1_met_display').textContent = `MET 值：${met.toFixed(1)}`;
+      function choosePlans(c) {
+        const groups = [];
+        if (c.knee || c.obese) groups.push('joint');
+        if (c.cvd || c.htn) groups.push('cardio');
+        if (c.older) groups.push('older');
+        if (c.beginner) groups.push('beginner');
+        if (c.dm) groups.push('dm');
+        if (!groups.length) groups.push('general');
+        const order = [];
+        groups.forEach(g => PREF[g].forEach(id => { if (!order.includes(id)) order.push(id); }));
+        const noHighImpact = c.knee || c.obese || c.older;
+        const capModerate = c.cvd || c.htn || c.beginner || c.older;
+        const n = groups[0] === 'general' ? 4 : 3;
+        const out = [];
+        const kinds = new Set();
+        for (const id of order) {
+          const p = POOL.find(x => x.id === id);
+          const met = BY_ID[id].met;
+          if (noHighImpact && p.impact === 'high') continue;
+          if (capModerate && met >= 6) continue;
+          if (p.kind === 'mindbody' && out.length < n - 1) continue; // 太極熱量低，只作為補充
+          if (kinds.has(p.kind)) continue;
+          kinds.add(p.kind);
+          out.push({ ...p, met, name: BY_ID[id].name });
+          if (out.length >= n) break;
+        }
+        return { groups, plans: out, noHighImpact, capModerate };
+      }
 
-      // Food equivalents
-      // 白飯 1 碗 約 280 kcal
-      // 珍奶 1 杯 約 550 kcal
-      // 蘋果 1 顆 約 60 kcal
-      // 雞胸肉 1 片 約 130 kcal
-      document.getElementById('t1_food_rice').textContent = (net / 280).toFixed(1);
-      document.getElementById('t1_food_boba').textContent = (net / 550).toFixed(1);
-      document.getElementById('t1_food_apple').textContent = (net / 60).toFixed(1);
-      document.getElementById('t1_food_chicken').textContent = (net / 130).toFixed(1);
-    }
+      // ACSM 2015 運動前篩檢
+      function screening(c) {
+        const disease = c.cvd || c.dm;
+        if (c.symptoms) return { level: 'danger', title: '先就醫評估，暫不開始新的運動計畫',
+          text: '有疑似心血管、代謝或腎臟疾病的症狀時，ACSM 建議先停止運動並取得醫療評估（medical clearance），經醫師同意後再依建議強度開始。' };
+        if (disease && c.beginner) return { level: 'warning', title: '建議先取得醫療評估再開始',
+          text: '目前未規律運動且有已知心血管／代謝／腎臟疾病：ACSM 建議先經醫師評估，之後從低至中等強度開始，逐步進展。' };
+        if (disease) return { level: 'info', title: '可持續中等強度運動',
+          text: '已規律運動且無症狀：可維持中等強度並循序漸進；若要提升到高強度，先經醫師評估。' };
+        if (c.beginner) return { level: 'success', title: '不需事先醫療評估，從低至中等強度開始',
+          text: '無已知疾病且無症狀：可直接開始，先從低至中等強度，再依耐受度逐步增加。' };
+        return { level: 'success', title: '不需事先醫療評估',
+          text: '已規律運動、無已知疾病與症狀：可維持或依指引逐步提高運動量。' };
+      }
 
-    // ==================== TAB 2 LOGIC ====================
-    function syncWeight(srcId) {
-      const w = document.getElementById(srcId).value;
-      document.getElementById(srcId === 't1_weight' ? 't2_weight' : 't1_weight').value = w;
-      calcMode1();
-      calcMode2();
-    }
+      function plan(inp) {
+        const c = { ...inp.conds };
+        c.older = inp.age >= 65;
+        const b = bmi(inp.weight, inp.height);
+        c.obese = b >= 30;
+        const cat = bmiCat(b);
+        const res = { conds: c, bmi: b, bmiCat: cat, alerts: [], blocks: [], notes: [] };
 
-    // 讀取數值並檢查範圍；不合理時回傳 NaN（不再默默改用預設值）
+        const B = bmr(inp.sex, inp.age, inp.height, inp.weight);
+        const tdee = B * inp.activity;
+        res.bmr = B; res.tdee = tdee;
+        res.screen = screening(c);
+
+        // 停止條件
+        const targetWeight = inp.weight - inp.lossKg;
+        res.targetWeight = targetWeight;
+        res.targetBmi = bmi(targetWeight, inp.height);
+        if (inp.age < 18) res.blocks.push({ title: '本工具適用 18 歲以上成人',
+          text: '兒童與青少年仍在生長發育，體重管理目標與熱量需求不同，請由兒科醫師或營養師評估。' });
+        if (b < 18.5) res.blocks.push({ title: '目前 BMI 已低於 18.5（過輕）',
+          text: '不建議再減重；若有非預期體重下降，請就醫評估原因與營養狀況。' });
+        else if (res.targetBmi < 18.5) res.blocks.push({ title: `目標體重 ${round(targetWeight, 1)} kg 的 BMI 為 ${round(res.targetBmi, 1)}，低於 18.5`,
+          text: `請下修減重目標；此身高 BMI 18.5 對應體重約 ${round(18.5 * (inp.height / 100) ** 2, 1)} kg。` });
+        if (c.symptoms) res.blocks.push({ title: '有運動相關警訊症狀', text: res.screen.text });
+
+        // 速度與赤字
+        const rate = inp.lossKg / inp.weeks;
+        const pct = rate / inp.weight * 100;
+        res.rate = rate; res.ratePct = pct;
+        const weeklyDeficit = inp.lossKg * KCAL_PER_KG / inp.weeks;
+        res.dailyDeficit = weeklyDeficit / 7;
+        res.dailyEx = res.dailyDeficit * inp.share;
+        res.dailyDiet = res.dailyDeficit * (1 - inp.share);
+        res.weeklyEx = weeklyDeficit * inp.share;
+        const safeRate = Math.min(1, inp.weight * 0.01);
+        res.suggestWeeks = Math.ceil(inp.lossKg / Math.min(0.75, safeRate));
+        if (rate > 1.5 || pct > 1.5) res.rateLevel = 'danger';
+        else if (rate > 1.0 || pct > 1.0) res.rateLevel = 'warning';
+        else if (rate < 0.25) res.rateLevel = 'slow';
+        else res.rateLevel = 'ok';
+
+        // 飲食
+        res.intake = tdee - res.dailyDiet;
+        res.intakeFloor = inp.sex === 'male' ? 1500 : 1200;
+        res.intakeLow = res.intake < res.intakeFloor;
+        res.intakeBelowBmr = res.intake < B;
+
+        if (res.blocks.length) return res;
+
+        // 運動處方
+        const restPerMin = B / 1440;
+        const sel = choosePlans(c);
+        res.groups = sel.groups;
+        const perSession = res.weeklyEx / inp.days;
+        res.perSession = perSession;
+        res.plans = sel.plans.map(p => {
+          const npm = burn(p.met, inp.weight, 1, restPerMin).netPerMin;
+          const raw = perSession / npm;
+          const minutes = Math.max(15, Math.ceil(raw / 5) * 5);
+          const kcal = npm * minutes;
+          const it = intensity(p.met);
+          const modEq = minutes * inp.days * (it.key === 'vigorous' ? 2 : 1);
+          let feas = 'ok';
+          if (minutes > 90) feas = 'infeasible';
+          else if (minutes > 60) feas = 'long';
+          // 若要單次 ≤60 分鐘：需要的週數
+          const weeksFor60 = Math.ceil(inp.lossKg * KCAL_PER_KG * inp.share / (60 * inp.days * npm));
+          const shareFor60 = 60 * inp.days * npm / weeklyDeficit;
+          const correctedMet = p.met * (inp.weight / 60) / restPerMin;
+          return { ...p, intensity: it, correctedMet, netPerMin: npm, minutes, kcal, weeklyMin: minutes * inp.days, modEq, feas, weeksFor60, shareFor60 };
+        });
+
+        // 每週總量（以第一項處方為代表）
+        const first = res.plans[0];
+        if (first) {
+          const m = first.modEq;
+          res.weekly = { min: first.weeklyMin, modEq: m,
+            level: m < 150 ? 'below' : (m < 250 ? 'health' : 'weight') };
+        }
+
+        // 注意事項
+        const N = (group, text) => res.notes.push({ group, text });
+        if (c.knee) {
+          N('膝關節／下肢疼痛', '運動中疼痛維持在輕度（約 0–10 分的 5 分以下），且隔天未比原本加劇，即可持續；若腫脹或疼痛加劇則先減量。');
+          N('膝關節／下肢疼痛', '避免深蹲跳、下坡跑與長時間下樓梯；加強股四頭肌與臀部肌力有助減輕膝痛。');
+        }
+        if (c.obese) N('高體重負荷', '以不負重或低衝擊有氧為主，注意散熱、補水與皮膚摩擦；先增加頻率與時間，再提高強度。');
+        if (c.cvd) {
+          N('心血管／腎臟疾病', '運動前後各 5–10 分鐘暖身與緩和；以自覺用力「有點吃力」（RPE 12–13）為上限，避免突然的高強度。');
+          N('心血管／腎臟疾病', '若醫師開立心臟復健或有運動心率上限，以醫師處方為準。');
+        }
+        if (c.htn) N('高血壓', '阻力訓練時避免憋氣用力（Valsalva），用力時吐氣；血壓控制不佳或在調整藥物時，先與醫師討論運動強度。');
+        if (c.dm) {
+          N('糖尿病', '有氧運動每週累積至少 150 分鐘、分散在至少 3 天，不要連續 2 天以上不活動；每週 2–3 次不連續的阻力訓練。');
+          N('糖尿病', '久坐時每 30 分鐘起身做幾分鐘輕度活動，有助血糖控制。');
+          N('糖尿病', '每天檢查雙腳、穿合腳鞋襪；有增殖性或嚴重非增殖性視網膜病變時，避免高強度、憋氣用力、跳躍與頭低於心臟的動作。');
+          if (c.insulin) N('糖尿病', '使用胰島素或 SU／glinide 類藥物者：運動前量血糖，若低於 90 mg/dL 先補充碳水化合物（約 15–30 g）；隨身攜帶糖片，運動中與運動後數小時注意低血糖症狀。');
+          if (inp.days < 3) res.alerts.push({ level: 'warning', title: '糖尿病建議每週至少 3 天有氧運動',
+            text: '目前設定每週 ' + inp.days + ' 天；建議分散到至少 3 天，避免連續 2 天以上不活動。' });
+        }
+        if (c.beginner) N('近期未規律運動', '前 2 週先做處方時間的 60–70%，或拆成每次 10–15 分鐘多次累積，再逐週增加。');
+        if (c.older) {
+          N('65 歲以上', '以自覺用力或說話測試判斷強度，而非 MET 數值；同一項活動對年長者的相對強度較高。');
+          N('65 歲以上', '每週至少 3 天加入平衡與多元功能訓練（如太極、單腳站、走直線），預防跌倒。');
+        }
+        if (!res.notes.length) N('一般', '運動前暖身、運動後緩和各 5–10 分鐘；出現胸痛、明顯喘、暈眩或心悸時立即停止。');
+
+        // 肌力與平衡
+        res.strength = {
+          days: c.dm ? '每週 2–3 天（不連續）' : '每週至少 2 天（不連續）',
+          lines: [
+            '訓練主要大肌群（腿、臀、背、胸、肩、手臂、核心）約 8–10 個動作，每個動作 8–15 下、1–3 組。',
+            '減重期間搭配阻力訓練有助保留肌肉量；可用彈力帶、啞鈴、器械或自身體重。',
+            c.knee ? '膝痛者優先：坐姿抬腿、側躺抬腿、坐站練習（椅子高度可調），避免深蹲到底。' : null,
+            c.htn || c.cvd ? '用力時吐氣、不憋氣；以中等負荷、較多次數為原則。' : null,
+            c.older ? '每週至少 3 天平衡訓練（單腳站、腳跟腳尖走直線、太極），可與肌力訓練結合。' : null
+          ].filter(Boolean)
+        };
+        return res;
+      }
+
+      return { KCAL_PER_KG, DB, BY_ID, POOL, PREF, bmi, bmiCat, bmr, intensity, burn, choosePlans, screening, plan, round };
+    })();
+    if (typeof module !== 'undefined') module.exports = EX;
+    /*ENGINE-END*/
+
+    // ==================== UI ====================
+    const $ = id => document.getElementById(id);
+
     function readNum(id, min, max) {
-      const el = document.getElementById(id);
+      const el = $(id);
       const v = parseFloat(el.value);
       const ok = Number.isFinite(v) && v >= min && v <= max;
       el.classList.toggle('invalid', !ok);
@@ -1091,380 +1523,310 @@
       return ok ? v : NaN;
     }
 
-    function handleConditionChange(type) {
-      const noneBox = document.getElementById('cond_none');
-      const otherIds = ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner'];
+    // ---------- Tab 1 ----------
+    function updateExerciseOptions() {
+      const cat = $('t1_category').value;
+      const select = $('t1_exercise');
+      select.innerHTML = '';
+      (EX.DB[cat] || []).forEach((item, i) => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = `${item.name}（MET ${item.met}）`;
+        if (i === 0) opt.selected = true;
+        select.appendChild(opt);
+      });
+      calcMode1();
+    }
 
-      if (type === 'none') {
-        if (noneBox.checked) {
-          otherIds.forEach(id => {
-            document.getElementById(id).checked = false;
-            document.getElementById(id + '_wrap').classList.remove('selected');
-          });
-          document.getElementById('cond_none_wrap').classList.add('selected');
-        } else if (!otherIds.some(id => document.getElementById(id).checked)) {
-          noneBox.checked = true; // 至少保留一個狀態
-        }
-      } else {
-        if (document.getElementById('cond_' + type).checked) {
-          noneBox.checked = false;
-          document.getElementById('cond_none_wrap').classList.remove('selected');
-          document.getElementById('cond_' + type + '_wrap').classList.add('selected');
-        } else {
-          document.getElementById('cond_' + type + '_wrap').classList.remove('selected');
-          // if all unchecked, check none
-          const anyChecked = otherIds.some(id => document.getElementById(id).checked);
-          if (!anyChecked) {
-            noneBox.checked = true;
-            document.getElementById('cond_none_wrap').classList.add('selected');
-          }
-        }
+    function setT1Duration(mins) {
+      $('t1_duration').value = mins;
+      calcMode1();
+    }
+
+    function calcMode1() {
+      const item = EX.BY_ID[$('t1_exercise').value];
+      const weight = readNum('t1_weight', 30, 250);
+      const durationMin = readNum('t1_duration', 1, 600);
+      document.querySelectorAll('.btn-chip').forEach(c => c.classList.toggle('active', Number(c.dataset.min) === durationMin));
+      if (!item || !Number.isFinite(weight) || !Number.isFinite(durationMin)) {
+        ['t1_gross_cal', 't1_net_cal', 't1_fat_burn'].forEach(id => { $(id).innerHTML = '—'; });
+        ['t1_food_rice', 't1_food_boba', 't1_food_apple', 't1_food_chicken'].forEach(id => { $(id).textContent = '—'; });
+        $('t1_intensity_text').innerHTML = '<span class="invalid-msg">請確認體重 30–250 kg、時間 1–600 分鐘</span>';
+        $('t1_met_display').textContent = '';
+        return;
       }
+      const { gross, net } = EX.burn(item.met, weight, durationMin);
+      $('t1_gross_cal').innerHTML = `${Math.round(gross)} <span class="stat-unit">kcal</span>`;
+      $('t1_net_cal').innerHTML = `${Math.round(net)} <span class="stat-unit">kcal</span>`;
+      $('t1_fat_burn').innerHTML = `${(net / EX.KCAL_PER_KG * 1000).toFixed(1)} <span class="stat-unit">g</span>`;
+      $('t1_intensity_text').textContent = EX.intensity(item.met).label;
+      $('t1_met_display').textContent = `MET ${item.met.toFixed(1)}${item.code ? '・Compendium ' + item.code : ''}`;
+      $('t1_food_rice').textContent = (net / 280).toFixed(1);
+      $('t1_food_boba').textContent = (net / 550).toFixed(1);
+      $('t1_food_apple').textContent = (net / 60).toFixed(1);
+      $('t1_food_chicken').textContent = (net / 130).toFixed(1);
+    }
+
+    function syncWeight(srcId) {
+      const w = $(srcId).value;
+      $(srcId === 't1_weight' ? 't2_weight' : 't1_weight').value = w;
+      calcMode1();
       calcMode2();
     }
 
-    function calcMode2() {
-      // 1. Get input metrics
-      const sex = document.getElementById('t2_sex').value;
-      const age = readNum('t2_age', 15, 100);
-      const height = readNum('t2_height', 100, 230);
-      const weight = readNum('t2_weight', 30, 250);
-      const targetLossKg = readNum('t2_target_loss', 0.5, 50);
-      const weeks = readNum('t2_time_weeks', 1, 104);
-      if ([age, height, weight, targetLossKg, weeks].some(v => !Number.isFinite(v))) {
-        const box = document.getElementById('safety_alert_box');
-        box.className = 'alert-banner alert-danger';
-        box.innerHTML = '<span>✏️</span><div><strong>輸入值超出範圍或空白。</strong> 請確認年齡 15–100 歲、身高 100–230 cm、體重 30–250 kg、減重目標 0.5–50 kg、時間 1–104 週。</div>';
-        document.getElementById('rx_container').innerHTML = '';
-        return;
-      }
-      const daysPerWeek = parseInt(document.getElementById('t2_days_per_week').value) || 4;
-      const exerciseSplitRatio = parseFloat(document.getElementById('t2_strategy').value) || 0.4;
+    // ---------- Tab 2 ----------
+    const USER_CONDS = ['knee', 'cvd', 'htn', 'dm', 'beginner', 'symptoms'];
 
-      // 2. BMI Calculation
-      const heightM = height / 100;
-      const bmi = weight / (heightM * heightM);
-      let bmiCategory = '正常體位';
-      let bmiColor = '#059669';
-      if (bmi < 18.5) { bmiCategory = '過輕'; bmiColor = '#2563EB'; }
-      else if (bmi >= 24 && bmi < 27) { bmiCategory = '過重'; bmiColor = '#D97706'; }
-      else if (bmi >= 27 && bmi < 30) { bmiCategory = '輕度肥胖'; bmiColor = '#EA580C'; }
-      else if (bmi >= 30) { bmiCategory = '中重度肥胖'; bmiColor = '#DC2626'; }
-
-      document.getElementById('t2_bmi_display').innerHTML = `<span style="color:${bmiColor}">${bmi.toFixed(1)} (${bmiCategory})</span>`;
-
-      // 高體重負荷由 BMI 自動判定（雙向，體重下降後會自動取消）
-      const obeseAuto = bmi >= 30;
-      document.getElementById('cond_obese').checked = obeseAuto;
-      document.getElementById('cond_obese_wrap').classList.toggle('selected', obeseAuto);
-
-      // 3. Deficit Calculations
-      // 1 kg fat tissue approx 7700 kcal
-      const totalDeficitNeeded = targetLossKg * 7700;
-      const weeklyDeficit = totalDeficitNeeded / weeks;
-      const dailyDeficit = weeklyDeficit / 7;
-      const weeklyLossRate = targetLossKg / weeks;
-
-      // Weekly deficit from exercise vs diet
-      const weeklyExerciseDeficit = weeklyDeficit * exerciseSplitRatio;
-      const dailyDietDeficit = (weeklyDeficit * (1 - exerciseSplitRatio)) / 7;
-      const dailyExerciseDeficit = weeklyExerciseDeficit / 7;
-
-      // 4. Safety & Feasibility Alert
-      const alertBox = document.getElementById('safety_alert_box');
-      document.getElementById('t2_weekly_rate').innerHTML = `${weeklyLossRate.toFixed(2)} <span class="stat-unit">kg/週</span>`;
-      document.getElementById('t2_daily_deficit').innerHTML = `${Math.round(dailyDeficit)} <span class="stat-unit">kcal</span>`;
-      document.getElementById('t2_split_desc').textContent = `運動 ${Math.round(dailyExerciseDeficit)} kcal + 飲食 ${Math.round(dailyDietDeficit)} kcal`;
-
-      if (weeklyLossRate <= 0.8) {
-        document.getElementById('t2_rate_verdict').textContent = '✅ 黃金安全速度';
-        document.getElementById('t2_rate_verdict').style.color = 'var(--success)';
-        alertBox.className = 'alert-banner alert-success';
-        alertBox.innerHTML = `
-          <span>🟢</span>
-          <div><strong>目標設定適中！</strong> 每週減重在 0.5～0.8 kg 範圍內，符合臨床安全減重標準，能最大程度保留肌肉量並預防復胖。</div>
-        `;
-      } else if (weeklyLossRate <= 1.2) {
-        document.getElementById('t2_rate_verdict').textContent = '⚠️ 較具挑戰性速度';
-        document.getElementById('t2_rate_verdict').style.color = 'var(--warning)';
-        alertBox.className = 'alert-banner alert-warning';
-        alertBox.innerHTML = `
-          <span>🟡</span>
-          <div><strong>目標具一定挑戰度。</strong> 每週減重達 ${weeklyLossRate.toFixed(2)} kg，需嚴格落實飲食熱量赤字與運動配合，建議特別注意補充足夠蛋白質與水份。</div>
-        `;
-      } else {
-        document.getElementById('t2_rate_verdict').textContent = '🚨 速度過快警示';
-        document.getElementById('t2_rate_verdict').style.color = 'var(--danger)';
-        alertBox.className = 'alert-banner alert-danger';
-        alertBox.innerHTML = `
-          <span>🔴</span>
-          <div><strong>減重速度過於激進！</strong> 每週減重超過 1.2 kg（每日總赤字需達 ${Math.round(dailyDeficit)} kcal）。過快的減重極易造成肌肉流失、掉髮、免疫力下降及溜溜球復胖，<strong>強烈建議將時間拉長至 ${Math.ceil(targetLossKg / 0.75)} 週以上</strong>。</div>
-        `;
-      }
-
-      // 5. Exercise Matching Engine based on Health Conditions
-      const condKnee = document.getElementById('cond_knee').checked;
-      const condCvd = document.getElementById('cond_cvd').checked;
-      const condDm = document.getElementById('cond_dm').checked;
-      const condBeginner = document.getElementById('cond_beginner').checked;
-      const condObese = document.getElementById('cond_obese').checked;
-
-      const matchedPlans = getPrescriptionPlans({
-        knee: condKnee,
-        cvd: condCvd,
-        dm: condDm,
-        beginner: condBeginner,
-        obese: condObese,
-        age: age,
-        bmi: bmi
+    function paintConditions() {
+      ['none', ...USER_CONDS, 'insulin'].forEach(k => {
+        $('cond_' + k + '_wrap').classList.toggle('selected', $('cond_' + k).checked);
       });
-
-      // 6. Calculate Duration per Session for each matched plan
-      const rxContainer = document.getElementById('rx_container');
-      rxContainer.innerHTML = '';
-
-      matchedPlans.forEach(plan => {
-        // Net calories per minute = (MET - 1) * weight / 60
-        const netCalPerMin = ((plan.met - 1) * weight) / 60;
-
-        // Single session deficit target = weeklyExerciseDeficit / daysPerWeek
-        const targetPerSession = weeklyExerciseDeficit / daysPerWeek;
-
-        let minutesNeeded = Math.round(targetPerSession / netCalPerMin);
-        if (minutesNeeded < 15) minutesNeeded = 15; // minimum viable aerobic stimulus
-
-        // Warning if duration too long
-        let durationWarning = '';
-        if (minutesNeeded > 60) {
-          durationWarning = `<div style="color:var(--danger); font-size:0.75rem; margin-top:4px;">⚠️ 單次時間較長，建議增加每週運動天數（如改為 5 天）或增加飲食赤字分攤。</div>`;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'rx-card';
-        card.innerHTML = `
-          <div class="rx-header">
-            <div class="rx-name">${plan.icon} ${plan.name}</div>
-            <span class="rx-tag ${plan.tagClass}">${plan.tagText}</span>
-          </div>
-          <div class="rx-details">
-            <div>
-              <div style="color:var(--text-muted); font-size:0.72rem;">建議頻率</div>
-              <div style="font-weight:700; font-size:1.05rem; color:#1C1917;">每週 ${daysPerWeek} 天</div>
-            </div>
-            <div>
-              <div style="color:var(--text-muted); font-size:0.72rem;">每次運動時長</div>
-              <div style="font-weight:800; font-size:1.15rem; color:var(--primary);">${minutesNeeded} 分鐘</div>
-            </div>
-            <div>
-              <div style="color:var(--text-muted); font-size:0.72rem;">每次淨消耗</div>
-              <div style="font-weight:700; font-size:1.05rem; color:#1C1917;">≈ ${Math.round(targetPerSession)} kcal</div>
-            </div>
-          </div>
-          <div class="rx-tip"><strong>💡 執行要點：</strong>${plan.guidance}</div>
-          ${durationWarning}
-        `;
-        rxContainer.appendChild(card);
-      });
-
+      $('cond_insulin_wrap').style.display = $('cond_dm').checked ? '' : 'none';
+      if (!$('cond_dm').checked) $('cond_insulin').checked = false;
     }
 
-    function getPrescriptionPlans(conds) {
-      let list = [];
-
-      // 膝關節問題或高肥胖：優先零關節衝擊
-      if (conds.knee || conds.obese) {
-        list.push({
-          icon: '🏊‍♂️',
-          name: '水中健走 / 水中有氧 (Water Aerobics)',
-          met: 4.5,
-          tagClass: 'tag-low-impact',
-          tagText: '關節零負擔首選',
-          guidance: '浮力可減輕 80% 體重對膝蓋的衝擊，在水中大步快走並配合擺臂，安全維持心肺。'
-        });
-        list.push({
-          icon: '🚴',
-          name: '固定式健身單車 (中低阻力)',
-          met: 5.0,
-          tagClass: 'tag-low-impact',
-          tagText: '低衝擊減脂',
-          guidance: '調整座椅高度至踏板踩到底時膝蓋微彎約 15~20 度，保持踏頻 70~80 rpm，不重踩。'
-        });
-        list.push({
-          icon: '🚶',
-          name: '平地平穩快走 (穿著避震鞋款)',
-          met: 3.8,
-          tagClass: 'tag-moderate',
-          tagText: '日常基礎有氧',
-          guidance: '選擇平整跑道或步道，避免下坡走或階梯，感覺呼吸微喘但能說出簡短句子的強度。'
-        });
-        return list;
+    function handleConditionChange(type) {
+      const none = $('cond_none');
+      const anyOther = () => USER_CONDS.some(k => $('cond_' + k).checked);
+      if (type === 'none') {
+        if (none.checked) USER_CONDS.forEach(k => { $('cond_' + k).checked = false; });
+        else if (!anyOther()) none.checked = true;
+      } else if (type !== 'insulin') {
+        none.checked = !anyOther();
       }
-
-      // 心血管/高血壓：避免極限力竭與高衝擊，強調平穩中等強度
-      if (conds.cvd) {
-        list.push({
-          icon: '🚶‍♂️',
-          name: '平地中速健走 / 戶外平路漫遊',
-          met: 4.0,
-          tagClass: 'tag-low-impact',
-          tagText: '心血管平穩保護',
-          guidance: '運動前後務必進行 5~10 分鐘溫和暖身與收操，避免突發性心率暴增。'
-        });
-        list.push({
-          icon: '🚴',
-          name: '靠背式 / 固定式健身車',
-          met: 4.5,
-          tagClass: 'tag-low-impact',
-          tagText: '平穩控心率',
-          guidance: '維持於自覺用力程度（RPE 11-13，有點吃力但能說話），避免閉氣用力。'
-        });
-        list.push({
-          icon: '🏊',
-          name: '休閒蛙式 / 輕鬆慢游',
-          met: 5.5,
-          tagClass: 'tag-moderate',
-          tagText: '全身有氧',
-          guidance: '節奏保持均勻，水溫適中，感覺微喘即可，勿追求衝刺速度。'
-        });
-        return list;
-      }
-
-      // 新手 / 久坐少動：循序漸進
-      if (conds.beginner) {
-        list.push({
-          icon: '🚶‍♀️',
-          name: '平地漸進快走 (Brisk Walking)',
-          met: 4.0,
-          tagClass: 'tag-low-impact',
-          tagText: '入門首選',
-          guidance: '抬頭挺胸、核心微收、步伐放輕，可拆分單日 2 次各累積 20 分鐘達到總量。'
-        });
-        list.push({
-          icon: '🚴',
-          name: '室內健身車 / 公路休閒騎車',
-          met: 4.8,
-          tagClass: 'tag-low-impact',
-          tagText: '腿部肌力啟動',
-          guidance: '低阻力輕快踩踏，培養持續運動的習慣與基礎心肺耐力。'
-        });
-        list.push({
-          icon: '🏋️‍♂️',
-          name: '超慢跑或中等徒手肌力有氧',
-          met: 5.5,
-          tagClass: 'tag-moderate',
-          tagText: '綜合適能',
-          guidance: '配合深蹲、分腿蹲與輕度慢跑，加強基礎代謝與核心力量。'
-        });
-        return list;
-      }
-
-      // 一般健康 / 糖尿病（需配合阻力） / 正常體能
-      list.push({
-        icon: '🏃‍♂️',
-        name: '標準戶外或跑步機慢跑 (約 8 km/h)',
-        met: 7.5,
-        tagClass: 'tag-cardio',
-        tagText: '高效燃脂心肺',
-        guidance: '維持心率在最大心率之 65%~80% 燃脂區間，每週搭配 1~2 次肌力訓練防肌肉流失。'
-      });
-      list.push({
-        icon: '🏊‍♀️',
-        name: '中速自由式 / 蛙式連續游泳',
-        met: 6.5,
-        tagClass: 'tag-low-impact',
-        tagText: '全身肌群雕塑',
-        guidance: '無關節負擔且能大量動員上半身與核心肌群，代謝消耗穩定。'
-      });
-      list.push({
-        icon: '🚴‍♂️',
-        name: '飛輪有氧 / 公路中速騎乘 (20 km/h)',
-        met: 7.0,
-        tagClass: 'tag-cardio',
-        tagText: '下肢耐力與爆發',
-        guidance: '可採用間歇調節（3分鐘中速 + 1分鐘加速），提高後燃效應（EPOC）。'
-      });
-      list.push({
-        icon: '🏸',
-        name: '羽球 / 網球 / 綜合球類活動',
-        met: 6.0,
-        tagClass: 'tag-moderate',
-        tagText: '趣味多元活動',
-        guidance: '結合敏捷、急停與爆發力，適合與朋友互動提升運動意願。'
-      });
-
-      return list;
-    }
-
-    // ==================== TAB SWITCHING & PRESETS ====================
-    function switchTab(tabIndex) {
-      document.getElementById('tabContent1').style.display = (tabIndex === 1) ? 'block' : 'none';
-      document.getElementById('tabContent2').style.display = (tabIndex === 2) ? 'block' : 'none';
-      document.getElementById('tabBtn1').classList.toggle('active', tabIndex === 1);
-      document.getElementById('tabBtn2').classList.toggle('active', tabIndex === 2);
+      paintConditions();
+      calcMode2();
     }
 
     function resetConditions() {
-      ['cond_knee', 'cond_cvd', 'cond_dm', 'cond_beginner'].forEach(id => {
-        document.getElementById(id).checked = false;
-        document.getElementById(id + '_wrap').classList.remove('selected');
-      });
-      document.getElementById('cond_none').checked = true;
-      document.getElementById('cond_none_wrap').classList.add('selected');
+      USER_CONDS.forEach(k => { $('cond_' + k).checked = false; });
+      $('cond_insulin').checked = false;
+      $('cond_none').checked = true;
+      paintConditions();
     }
 
-    function loadPreset(key) {
-      resetConditions();
-      if (key === 'office_worker') {
-        switchTab(2);
-        document.getElementById('t2_sex').value = 'male';
-        document.getElementById('t2_age').value = 35;
-        document.getElementById('t2_height').value = 175;
-        document.getElementById('t2_weight').value = 80;
-        document.getElementById('t2_target_loss').value = 3;
-        document.getElementById('t2_time_weeks').value = 8;
-        document.getElementById('t2_days_per_week').value = '4';
-        document.getElementById('t2_strategy').value = '0.4';
-      } else if (key === 'knee_friendly') {
-        switchTab(2);
-        document.getElementById('t2_sex').value = 'female';
-        document.getElementById('t2_age').value = 52;
-        document.getElementById('t2_height').value = 160;
-        document.getElementById('t2_weight').value = 72;
-        document.getElementById('t2_target_loss').value = 5;
-        document.getElementById('t2_time_weeks').value = 12;
-        document.getElementById('t2_days_per_week').value = '4';
-        document.getElementById('t2_strategy').value = '0.4';
-        document.getElementById('cond_knee').checked = true;
-        handleConditionChange('knee');
-      } else if (key === 'beginner') {
-        switchTab(2);
-        document.getElementById('t2_sex').value = 'female';
-        document.getElementById('t2_age').value = 28;
-        document.getElementById('t2_height').value = 165;
-        document.getElementById('t2_weight').value = 68;
-        document.getElementById('t2_target_loss').value = 4;
-        document.getElementById('t2_time_weeks').value = 16;
-        document.getElementById('t2_days_per_week').value = '3';
-        document.getElementById('t2_strategy').value = '0.3';
-        document.getElementById('cond_beginner').checked = true;
-        handleConditionChange('beginner');
-      } else if (key === 'active_fit') {
-        switchTab(2);
-        document.getElementById('t2_sex').value = 'male';
-        document.getElementById('t2_age').value = 29;
-        document.getElementById('t2_height').value = 178;
-        document.getElementById('t2_weight').value = 76;
-        document.getElementById('t2_target_loss').value = 2;
-        document.getElementById('t2_time_weeks').value = 6;
-        document.getElementById('t2_days_per_week').value = '5';
-        document.getElementById('t2_strategy').value = '0.5';
+    function readInputs() {
+      const v = {
+        sex: $('t2_sex').value,
+        age: readNum('t2_age', 15, 100),
+        height: readNum('t2_height', 100, 230),
+        weight: readNum('t2_weight', 30, 250),
+        lossKg: readNum('t2_target_loss', 0.5, 50),
+        weeks: readNum('t2_time_weeks', 1, 104),
+        days: parseInt($('t2_days_per_week').value, 10),
+        share: parseFloat($('t2_strategy').value),
+        activity: parseFloat($('t2_activity').value),
+        conds: {}
+      };
+      ['knee', 'cvd', 'htn', 'dm', 'beginner', 'symptoms', 'insulin'].forEach(k => { v.conds[k] = $('cond_' + k).checked; });
+      return v;
+    }
+
+    const ALERT_ICON = { success: '🟢', info: 'ℹ️', warning: '🟡', danger: '🔴' };
+    function alertHtml(level, title, text) {
+      return `<div class="alert-banner alert-${level}"><span>${ALERT_ICON[level]}</span><div><strong>${title}</strong>${text ? ' ' + text : ''}</div></div>`;
+    }
+
+    let lastResult = null;
+    let lastInput = null;
+
+    function calcMode2() {
+      const inp = readInputs();
+      const nums = [inp.age, inp.height, inp.weight, inp.lossKg, inp.weeks];
+      const clearOut = () => {
+        ['t2_weekly_rate', 't2_daily_deficit', 't2_intake'].forEach(id => { $(id).innerHTML = '—'; });
+        ['t2_rate_verdict', 't2_split_desc', 't2_energy_desc'].forEach(id => { $(id).textContent = ''; });
+        ['rx_container', 'weekly_box', 'strength_box', 'notes_box', 'screen_box'].forEach(id => { $(id).innerHTML = ''; });
+      };
+      if (nums.some(x => !Number.isFinite(x))) {
+        lastResult = null;
+        $('t2_bmi_display').textContent = '—';
+        $('alert_list').innerHTML = alertHtml('danger', '輸入值超出範圍或空白。', '請確認年齡 15–100 歲、身高 100–230 cm、體重 30–250 kg、減重目標 0.5–50 kg、時間 1–104 週。');
+        clearOut();
+        return;
       }
+
+      const r = EX.plan(inp);
+      lastResult = r; lastInput = inp;
+
+      $('t2_bmi_display').innerHTML = `<span style="color:${r.bmiCat.color}">${r.bmi.toFixed(1)}（${r.bmiCat.label}）</span>`;
+      $('cond_obese').checked = r.conds.obese;
+      $('cond_older').checked = r.conds.older;
+      $('cond_obese_wrap').classList.toggle('selected', r.conds.obese);
+      $('cond_older_wrap').classList.toggle('selected', r.conds.older);
+
+      // 速度
+      $('t2_weekly_rate').innerHTML = `${r.rate.toFixed(2)} <span class="stat-unit">kg/週</span>`;
+      const RV = {
+        ok: ['✅ 在建議範圍內', 'var(--success)'],
+        slow: ['🐢 速度溫和', 'var(--info)'],
+        warning: ['⚠️ 超過建議速度', 'var(--warning)'],
+        danger: ['🚨 速度過快', 'var(--danger)']
+      }[r.rateLevel];
+      $('t2_rate_verdict').innerHTML = `<span style="color:${RV[1]}">${RV[0]}</span>・約體重 ${r.ratePct.toFixed(1)}%`;
+      $('t2_daily_deficit').innerHTML = `${Math.round(r.dailyDeficit)} <span class="stat-unit">kcal</span>`;
+      $('t2_split_desc').textContent = `運動 ${Math.round(r.dailyEx)} + 飲食 ${Math.round(r.dailyDiet)} kcal`;
+      $('t2_intake').innerHTML = `${Math.round(r.intake)} <span class="stat-unit">kcal</span>`;
+      $('t2_energy_desc').textContent = `TDEE ${Math.round(r.tdee)} − 飲食赤字 ${Math.round(r.dailyDiet)}（BMR ${Math.round(r.bmr)}）`;
+
+      const alerts = [];
+      r.blocks.forEach(b => alerts.push(alertHtml('danger', b.title, b.text)));
+      if (!r.blocks.length) {
+        if (r.rateLevel === 'ok') alerts.push(alertHtml('success', '目標速度適中。', '每週減重約 0.25–1 kg 且不超過體重 1%，較能保留肌肉、降低復胖。'));
+        else if (r.rateLevel === 'slow') alerts.push(alertHtml('info', '速度溫和。', '每週少於 0.25 kg，執行壓力小；若希望較明顯成效，可縮短週數或提高赤字（一般建議每週 0.5–1 kg）。'));
+        else if (r.rateLevel === 'warning') alerts.push(alertHtml('warning', '超過一般建議的每週 0.5–1 kg。', `需要嚴格執行，並確保蛋白質與水分足夠；建議延長至約 ${r.suggestWeeks} 週。`));
+        else alerts.push(alertHtml('danger', '減重速度過快。', `每週 ${r.rate.toFixed(2)} kg（體重 ${r.ratePct.toFixed(1)}%）易造成肌肉流失與復胖；建議延長至約 ${r.suggestWeeks} 週，或在醫療團隊監督下進行。`));
+        if (r.intakeLow) alerts.push(alertHtml('danger', `每日攝取約 ${Math.round(r.intake)} kcal，低於 ${r.intakeFloor} kcal。`, '不建議在無專業監督下採用；請提高運動分攤比例、延長週數，或與營養師討論。'));
+        else if (r.intakeBelowBmr) alerts.push(alertHtml('warning', `每日攝取約 ${Math.round(r.intake)} kcal，低於估算基礎代謝（${Math.round(r.bmr)} kcal）。`, '長期可能不易維持，建議與營養師討論飲食安排。'));
+        if (r.bmiCat.key === 'normal') alerts.push(alertHtml('info', '目前 BMI 在正常範圍。', '可改以腰圍（男 <90 cm、女 <80 cm）與體能、肌力為主要目標。'));
+        r.alerts.forEach(a => alerts.push(alertHtml(a.level, a.title, a.text)));
+      }
+      $('alert_list').innerHTML = alerts.join('');
+
+      $('screen_box').innerHTML = alertHtml(r.screen.level, r.screen.title, r.screen.text);
+
+      if (r.blocks.length) {
+        $('rx_container').innerHTML = '<div class="muted-box">因上方紅色警示，暫不產生減重運動處方。</div>';
+        ['weekly_box', 'strength_box', 'notes_box'].forEach(id => { $(id).innerHTML = ''; });
+        return;
+      }
+
+      // 處方卡
+      $('rx_container').innerHTML = r.plans.map(p => {
+        let meta = '';
+        if (p.feas === 'infeasible') meta = `<div class="rx-meta bad">🚫 單次 ${p.minutes} 分鐘不切實際。若要單次 ≤60 分鐘：把週數延長到約 ${p.weeksFor60} 週，或運動分攤降到約 ${Math.max(0, Math.floor(p.shareFor60 * 100))}% 以下，或增加每週天數。</div>`;
+        else if (p.feas === 'long') meta = `<div class="rx-meta warn">⏱️ 單次超過 60 分鐘，可拆成早晚兩段；或把週數延長到約 ${p.weeksFor60} 週。</div>`;
+        const raw = r.perSession / p.netPerMin;
+        if (raw < 15) meta += `<div class="rx-meta ok">已達最低 15 分鐘；實際消耗 ≈ ${Math.round(p.kcal)} kcal，略高於所需。</div>`;
+        return `
+          <div class="rx-card${p.feas === 'infeasible' ? ' infeasible' : ''}">
+            <div class="rx-header">
+              <div class="rx-name">${p.icon} ${p.name}</div>
+              <span class="rx-tag ${p.impact === 'high' ? 'tag-cardio' : (p.impact === 'none' ? 'tag-low-impact' : 'tag-moderate')}">${p.tag}</span>
+            </div>
+            <div class="rx-details">
+              <div>
+                <div style="color:var(--text-muted); font-size:0.72rem;">頻率／強度</div>
+                <div style="font-weight:700; font-size:1.0rem; color:#1C1917;">每週 ${lastInput.days} 天</div>
+                <div style="font-size:0.72rem; color:var(--text-muted);">${p.intensity.label}・MET ${p.met}</div>
+                <div style="font-size:0.68rem; color:var(--text-muted);" title="以個人估算 RMR 取代 1 MET 的相對強度">個人校正 ≈ ${p.correctedMet.toFixed(1)}</div>
+              </div>
+              <div>
+                <div style="color:var(--text-muted); font-size:0.72rem;">每次時間</div>
+                <div style="font-weight:800; font-size:1.15rem; color:${p.feas === 'infeasible' ? 'var(--danger)' : 'var(--primary)'};">${p.minutes} 分鐘</div>
+                <div style="font-size:0.72rem; color:var(--text-muted);">每週 ${p.weeklyMin} 分鐘</div>
+              </div>
+              <div>
+                <div style="color:var(--text-muted); font-size:0.72rem;">每次淨消耗</div>
+                <div style="font-weight:700; font-size:1.0rem; color:#1C1917;">≈ ${Math.round(p.kcal)} kcal</div>
+              </div>
+            </div>
+            <div class="rx-tip"><strong>💡 執行要點：</strong>${p.g}</div>
+            ${meta}
+          </div>`;
+      }).join('');
+
+      if (r.weekly) {
+        const W = {
+          below: ['warning', `每週約 ${r.weekly.modEq} 分鐘（中等強度當量），低於 150 分鐘。`, '雖已達熱量目標，仍建議逐步增加到每週 150–300 分鐘中等強度，以獲得心血管與代謝健康效益。'],
+          health: ['success', `每週約 ${r.weekly.modEq} 分鐘（中等強度當量），達到 150 分鐘的健康建議。`, '研究顯示每週超過約 250 分鐘與較明顯的減重及減重後維持有關，可作為後續目標。'],
+          weight: ['success', `每週約 ${r.weekly.modEq} 分鐘（中等強度當量），已超過 250 分鐘。`, '達到有助明顯減重與維持的運動量；注意休息與傷害預防。']
+        }[r.weekly.level];
+        $('weekly_box').innerHTML = `<div style="margin-top:6px;">${alertHtml(W[0], W[1], W[2])}</div><div class="stat-sub" style="text-align:left;">以第一項處方估算；高強度 1 分鐘以 2 分鐘中等強度計（WHO 2020）。淨消耗已扣除個人估算基礎代謝（Mifflin-St Jeor）。</div>`;
+      }
+
+      $('strength_box').innerHTML = `<div class="note-group-title">${r.strength.days}</div><ul class="note-list">${r.strength.lines.map(l => `<li>${l}</li>`).join('')}</ul>`;
+
+      const grouped = {};
+      r.notes.forEach(n => { (grouped[n.group] = grouped[n.group] || []).push(n.text); });
+      $('notes_box').innerHTML = Object.entries(grouped).map(([g, list]) =>
+        `<div class="note-group-title">${g}</div><ul class="note-list">${list.map(t => `<li>${t}</li>`).join('')}</ul>`).join('');
+    }
+
+    // ---------- 摘要 ----------
+    function summaryText() {
+      const r = lastResult, i = lastInput;
+      if (!r) return '';
+      const L = [];
+      L.push('【減重運動處方摘要】');
+      L.push(`${i.sex === 'male' ? '男' : '女'}，${i.age} 歲，${i.height} cm，${i.weight} kg，BMI ${r.bmi.toFixed(1)}（${r.bmiCat.label}）`);
+      L.push(`目標：${i.weeks} 週減 ${i.lossKg} kg（每週 ${r.rate.toFixed(2)} kg）`);
+      if (r.blocks.length) { r.blocks.forEach(b => L.push('⚠ ' + b.title + '：' + b.text)); return L.join('\n'); }
+      L.push(`每日赤字 ${Math.round(r.dailyDeficit)} kcal：運動 ${Math.round(r.dailyEx)}＋飲食 ${Math.round(r.dailyDiet)}；建議攝取約 ${Math.round(r.intake)} kcal/日`);
+      L.push(`運動前篩檢：${r.screen.title}`);
+      L.push('有氧（任選或交替）：');
+      r.plans.forEach(p => L.push(`・${p.name}：每週 ${i.days} 天 × ${p.minutes} 分鐘（${p.intensity.label}）`));
+      L.push(`肌力：${r.strength.days}；${r.strength.lines[0]}`);
+      const g = [...new Set(r.notes.map(n => n.group))];
+      g.forEach(k => L.push(`${k}：` + r.notes.filter(n => n.group === k).map(n => n.text).join(' ')));
+      L.push('※ 估算值，請依個人狀況與專業人員建議調整。');
+      return L.join('\n');
+    }
+
+    function copySummary() {
+      const txt = summaryText();
+      const done = ok => { $('copy_status').textContent = ok ? '已複製' : '複製失敗，請手動選取'; setTimeout(() => { $('copy_status').textContent = ''; }, 2500); };
+      if (!txt) return done(false);
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(() => done(true), () => done(false));
+      else {
+        const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select();
+        try { done(document.execCommand('copy')); } catch (e) { done(false); }
+        ta.remove();
+      }
+    }
+
+    // ---------- Tabs & presets ----------
+    function switchTab(tabIndex) {
+      [1, 2].forEach(n => {
+        $('tabContent' + n).style.display = n === tabIndex ? 'block' : 'none';
+        const b = $('tabBtn' + n);
+        b.classList.toggle('active', n === tabIndex);
+        b.setAttribute('aria-selected', n === tabIndex ? 'true' : 'false');
+        b.tabIndex = n === tabIndex ? 0 : -1;
+      });
+    }
+
+    function tabKey(e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      const next = $('tabBtn1').classList.contains('active') ? 2 : 1;
+      switchTab(next);
+      $('tabBtn' + next).focus();
+      e.preventDefault();
+    }
+
+    const PRESETS = {
+      office_worker: { sex: 'male', age: 35, height: 175, weight: 80, loss: 3, weeks: 8, days: 4, share: '0.4', activity: '1.2', conds: [] },
+      knee_friendly: { sex: 'female', age: 52, height: 160, weight: 72, loss: 5, weeks: 12, days: 4, share: '0.4', activity: '1.2', conds: ['knee'] },
+      beginner: { sex: 'female', age: 28, height: 165, weight: 68, loss: 4, weeks: 16, days: 3, share: '0.3', activity: '1.2', conds: ['beginner'] },
+      dm_senior: { sex: 'male', age: 68, height: 168, weight: 82, loss: 4, weeks: 16, days: 5, share: '0.4', activity: '1.375', conds: ['dm', 'htn', 'insulin'] },
+      active_fit: { sex: 'male', age: 29, height: 178, weight: 76, loss: 2, weeks: 6, days: 5, share: '0.5', activity: '1.55', conds: [] }
+    };
+
+    function loadPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      switchTab(2);
+      resetConditions();
+      $('t2_sex').value = p.sex;
+      $('t2_age').value = p.age;
+      $('t2_height').value = p.height;
+      $('t2_weight').value = p.weight;
+      $('t1_weight').value = p.weight;
+      $('t2_target_loss').value = p.loss;
+      $('t2_time_weeks').value = p.weeks;
+      $('t2_days_per_week').value = String(p.days);
+      $('t2_strategy').value = p.share;
+      $('t2_activity').value = p.activity;
+      p.conds.forEach(k => { $('cond_' + k).checked = true; });
+      $('cond_none').checked = !USER_CONDS.some(k => $('cond_' + k).checked);
+      paintConditions();
+      calcMode1();
       calcMode2();
     }
 
-    // Initialize on load
     window.addEventListener('DOMContentLoaded', () => {
       updateExerciseOptions();
+      paintConditions();
       calcMode2();
     });
   </script>
